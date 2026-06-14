@@ -1,0 +1,14 @@
+# Netlify build + host canonicalization for hitarthdesai.com
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Force apex canonical: redirect www → apex (BUILD.md Phase 2).
+[[redirects]]
+  from = "https://www.hitarthdesai.com/*"
+  to = "https://hitarthdesai.com/:splat"
+  status = 301
+  force = true

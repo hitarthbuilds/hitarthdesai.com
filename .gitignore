@@ -1,0 +1,12 @@
+node_modules
+dist
+.DS_Store
+*.local
+
+# Local tooling
+.claude/
+
+# Internal planning specs — not for the public site repo
+BUILD.md
+AUTOMATE.md
+hitarth-desai-digital-footprint-asset-pack.md

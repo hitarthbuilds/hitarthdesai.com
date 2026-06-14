@@ -1,0 +1,25 @@
+{
+  "name": "hitarthdesai-com",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "hitarthdesai.com — entity-SEO / AEO personal site (Vite + React + Framer Motion + Lenis, prerendered)",
+  "scripts": {
+    "dev": "vite",
+    "stats": "node scripts/fetch-stats.mjs",
+    "build": "vite-react-ssg build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "framer-motion": "11.18.2",
+    "lenis": "1.3.23",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "4.7.0",
+    "react-router-dom": "6.30.4",
+    "vite": "5.4.21",
+    "vite-react-ssg": "0.9.0"
+  }
+}
