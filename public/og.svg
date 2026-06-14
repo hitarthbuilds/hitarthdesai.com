@@ -1,0 +1,29 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="134" y1="64" x2="1040" y2="568" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#14151D"/>
+      <stop offset="1" stop-color="#090A0F"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="194" y1="146" x2="978" y2="468" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF9B61"/>
+      <stop offset="1" stop-color="#E8743B"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" rx="36" fill="url(#bg)"/>
+  <circle cx="975" cy="114" r="150" fill="#E8743B" fill-opacity="0.18"/>
+  <circle cx="225" cy="512" r="184" fill="#6BA6FF" fill-opacity="0.08"/>
+
+  <text x="98" y="116" fill="#E8743B" font-family="'JetBrains Mono', monospace" font-size="20" letter-spacing="0.18em">HITARTH DESAI AI ENGINEER</text>
+  <text x="98" y="208" fill="#F4F6F8" font-family="'Space Grotesk', sans-serif" font-size="68" font-weight="700">Reliable LLM Systems</text>
+  <text x="98" y="286" fill="#F4F6F8" font-family="'Space Grotesk', sans-serif" font-size="68" font-weight="700">Structured Outputs</text>
+  <text x="98" y="360" fill="#AEB8C2" font-family="'Inter', sans-serif" font-size="30">LLM pipelines, MLOps infrastructure, open-source engineering.</text>
+
+  <path d="M100 444C184 444 192 500 279 500C367 500 374 400 463 400C552 400 560 472 652 472C744 472 758 326 850 326C942 326 961 444 1102 444" stroke="url(#glow)" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="279" cy="500" r="10" fill="#FF9B61"/>
+  <circle cx="463" cy="400" r="10" fill="#FF9B61"/>
+  <circle cx="652" cy="472" r="10" fill="#FF9B61"/>
+  <circle cx="850" cy="326" r="10" fill="#FF9B61"/>
+
+  <text x="98" y="544" fill="#D9DFE6" font-family="'JetBrains Mono', monospace" font-size="22">hitarthdesai.com</text>
+</svg>

@@ -57,10 +57,10 @@ export const structure = {
     },
     {
       name: 'promptcrucible',
-      href: 'https://pypi.org/project/promptcrucible/',
+      href: null,
       blurb:
         'A multi-agent prompt-optimization workbench for systematically testing and ' +
-        'improving prompts against eval harnesses. On PyPI.',
+        'improving prompts against eval harnesses. In active development.',
     },
     {
       name: 'AnswerRank AI',
@@ -143,8 +143,8 @@ export const faq = {
       q: 'What open-source tools has he built?',
       a:
         'confident-extract — a Python library for deterministic, schema-constrained ' +
-        'extraction from LLMs, built on msgspec — and promptcrucible, a multi-agent ' +
-        'prompt-optimization workbench. Both are published under his PyPI account.',
+        'extraction from LLMs, built on msgspec — is published on PyPI. promptcrucible, ' +
+        'a multi-agent prompt-optimization workbench, is in active development.',
     },
     {
       q: 'What roles is he open to?',
@@ -170,8 +170,16 @@ export const faq = {
   ],
 };
 
+export const writing = {
+  eyebrow: '07 / Publish',
+  heading: 'Writing',
+  lead:
+    'Field notes on making LLMs reliable in production — structured outputs, pipeline ' +
+    'infrastructure, and the unglamorous layer in between.',
+};
+
 export const signal = {
-  eyebrow: '07 / Signal',
+  eyebrow: '08 / Signal',
   heading: 'Off the clock',
   body:
     'International gold-medalist powerlifter. I play guitar and perform live — mostly ' +
@@ -180,7 +188,7 @@ export const signal = {
 };
 
 export const ship = {
-  eyebrow: '08 / Ship',
+  eyebrow: '09 / Ship',
   heading: 'Get in touch',
   body:
     'Currently at InfraDock AI. Open to AI Systems / Founding Engineer roles at ' +

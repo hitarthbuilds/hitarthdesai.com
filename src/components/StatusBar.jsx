@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
-// Fixed instrument-style HUD across the top: identity readout + live IST clock +
-// availability status. The clock is client-only (renders a static placeholder in
-// SSR/no-JS). Pure chrome — all real content lives below and is independent of it.
+// Fixed instrument-style HUD across the top. Now also the site's primary nav
+// (identity → home, Writing → blog). Live IST clock is client-only (renders a
+// static placeholder in SSR/no-JS).
 export function StatusBar() {
   const [clock, setClock] = useState('—— ——');
 
@@ -21,10 +22,11 @@ export function StatusBar() {
   }, []);
 
   return (
-    <header className="statusbar" aria-hidden="true">
-      <span className="sb-id">HITARTH&nbsp;DESAI</span>
-      <span className="sb-mid">AI&nbsp;SYSTEMS&nbsp;ENGINEER</span>
+    <header className="statusbar">
+      <Link to="/" className="sb-id">HITARTH DESAI</Link>
+      <span className="sb-mid">AI SYSTEMS ENGINEER</span>
       <span className="sb-right">
+        <Link to="/blog" className="sb-link">WRITING</Link>
         <span className="sb-clock">{clock} IST</span>
         <span className="sb-status">
           <span className="sb-dot" /> OPEN TO ROLES

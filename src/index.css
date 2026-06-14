@@ -512,6 +512,193 @@ a.work-card:hover .work-stat { color: var(--paper); }
 }
 
 /* ============================================================
+   Status HUD — nav links
+   ============================================================ */
+a.sb-id { text-decoration: none; transition: color 0.2s ease; }
+a.sb-id:hover { color: var(--ember); }
+.sb-link {
+  text-decoration: none;
+  color: var(--mist);
+  transition: color 0.2s ease;
+}
+.sb-link:hover { color: var(--ember); }
+
+/* ============================================================
+   Writing section (homepage)
+   ============================================================ */
+.writing-list {
+  list-style: none;
+  margin: 0 0 1.6rem;
+  padding: 0;
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.writing-item { background: rgba(19, 21, 25, 0.66); }
+.writing-link {
+  display: block;
+  padding: 1.4rem 1.5rem;
+  text-decoration: none;
+  transition: background 0.25s ease;
+}
+.writing-link:hover { background: rgba(19, 21, 25, 0.95); }
+.writing-meta {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  color: var(--mist);
+  margin-bottom: 0.5rem;
+}
+.writing-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--paper);
+  margin-bottom: 0.45rem;
+  transition: color 0.2s ease;
+}
+.writing-link:hover .writing-title { color: var(--ember); }
+.writing-excerpt { display: block; color: var(--mist); font-size: 0.96rem; line-height: 1.55; }
+
+/* ============================================================
+   Blog pages — shared page shell (no pipeline rail)
+   ============================================================ */
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: calc(var(--bar-h) + clamp(3rem, 10vh, 6rem)) var(--gutter) clamp(4rem, 12vh, 7rem);
+}
+.page-inner { width: 100%; }
+.page-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 0.4rem 0 1.2rem;
+}
+.page-lead { color: var(--mist); font-size: 1.15rem; max-width: 60ch; margin: 0 0 3rem; }
+.page-back { margin-top: 3rem; }
+
+/* Blog index — post list */
+.post-list { list-style: none; margin: 0; padding: 0; }
+.post-row { border-top: 1px solid var(--line); }
+.post-row:last-child { border-bottom: 1px solid var(--line); }
+.post-link { display: block; padding: 2rem 0; text-decoration: none; }
+.post-meta { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.05em; color: var(--mist); }
+.post-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+  letter-spacing: -0.015em;
+  margin: 0.6rem 0 0.7rem;
+  color: var(--paper);
+  transition: color 0.2s ease;
+}
+.post-link:hover .post-title { color: var(--ember); }
+.post-excerpt { margin: 0 0 1rem; color: var(--mist); font-size: 1.02rem; line-height: 1.55; max-width: 62ch; }
+.post-tags { list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem 0.5rem; margin: 0; padding: 0; }
+.post-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--mist);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.22rem 0.5rem;
+}
+
+/* Blog post — article */
+.post { width: 100%; }
+.post-back { margin: 0 0 2rem; }
+.post-header { margin-bottom: 2.5rem; padding-bottom: 2rem; border-bottom: 1px solid var(--line); }
+.post-h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 5.5vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin: 0.6rem 0 1.2rem;
+}
+.post-footer {
+  margin-top: 3.5rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--mist);
+  display: grid;
+  gap: 0.6rem;
+}
+
+/* Prose — rendered markdown */
+.prose { font-size: 1.08rem; line-height: 1.75; color: #cfd3d8; }
+.prose > * + * { margin-top: 1.3rem; }
+.prose h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.6rem;
+  letter-spacing: -0.015em;
+  color: var(--paper);
+  margin: 2.6rem 0 0;
+  line-height: 1.2;
+}
+.prose h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; color: var(--paper); margin-top: 2rem; }
+.prose p { margin: 0; }
+.prose a { color: var(--ember); text-decoration: none; border-bottom: 1px solid rgba(232, 116, 59, 0.4); }
+.prose a:hover { border-color: var(--ember); }
+.prose strong { color: var(--paper); font-weight: 600; }
+.prose ul, .prose ol { margin: 0; padding-left: 1.3rem; }
+.prose li { margin: 0.4rem 0; }
+.prose li::marker { color: var(--ember); }
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 0.1rem 0.35rem;
+  color: var(--paper);
+}
+.prose pre {
+  background: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1.1rem 1.3rem;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.prose pre code { background: none; border: 0; padding: 0; font-size: 0.9em; }
+.prose blockquote { margin: 0; padding-left: 1.1rem; border-left: 2px solid var(--ember); color: var(--mist); font-style: italic; }
+.prose hr { border: 0; border-top: 1px solid var(--line); margin: 2.4rem 0; }
+.prose-figure {
+  margin: 2rem 0;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at top right, rgba(232, 116, 59, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(18, 18, 21, 0.92), rgba(10, 10, 12, 0.96));
+  overflow: hidden;
+}
+.prose-figure img { display: block; width: 100%; height: auto; }
+.prose-figure figcaption {
+  padding: 1rem 1.15rem 1.1rem;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--mist);
+}
+
+/* ============================================================
    Pipeline rail
    ============================================================ */
 .pipeline-rail {

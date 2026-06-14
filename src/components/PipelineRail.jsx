@@ -8,7 +8,7 @@ import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 // motion / no-JS → fully drawn, all nodes lit.
 const VIEW_W = 60;
 const VIEW_H = 1000;
-const NODES = 8;
+const NODES = 9;
 
 const nodeY = (i) => ((i + 0.5) / NODES) * VIEW_H;
 const nodeX = (i) => (i % 2 === 0 ? 22 : 38);
