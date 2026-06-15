@@ -15,7 +15,7 @@ tags:
   - schema validation
   - production AI
 canonical: https://hitarthdesai.com/blog/deterministic-structured-outputs-production-llm-pipelines/
-ogImage: https://hitarthdesai.com/og.svg
+ogImage: https://hitarthdesai.com/og.png
 ---
 
 Most LLM demos work. That's the problem. A demo only has to succeed once, in front of a friendly audience, on an input someone hand-picked. A production pipeline has to succeed on the ten-thousandth document, at 3am, on the malformed input nobody anticipated — and then hand its result to a downstream service that will do something irreversible with it.

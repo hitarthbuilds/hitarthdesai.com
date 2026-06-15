@@ -34,7 +34,7 @@ export default function BlogIndex() {
         <meta property="og:title" content="Writing by Hitarth Desai AI Engineer" />
         <meta property="og:description" content="Notes on structured outputs, production LLM pipelines, MLOps, and reliable AI systems." />
         <meta property="og:url" content="https://hitarthdesai.com/blog/" />
-        <meta property="og:image" content="https://hitarthdesai.com/og.svg" />
+        <meta property="og:image" content="https://hitarthdesai.com/og.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:creator" content="@hitarthbuilds" />
       </Head>

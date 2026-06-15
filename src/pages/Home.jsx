@@ -27,7 +27,7 @@ export default function Home() {
         <meta property="og:title" content="Hitarth Desai AI Engineer" />
         <meta property="og:description" content="LLM data extraction pipelines, structured outputs, MLOps infrastructure, and open-source tooling." />
         <meta property="og:url" content="https://hitarthdesai.com/" />
-        <meta property="og:image" content="https://hitarthdesai.com/og.svg" />
+        <meta property="og:image" content="https://hitarthdesai.com/og.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:creator" content="@hitarthbuilds" />
       </Head>
