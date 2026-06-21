@@ -22,6 +22,8 @@ ogImage: https://hitarthdesai.com/og.png
 
 Most LLM products start with a prompt.
 
+Also on Medium: [Beyond Prompt Engineering: The AI Systems Layer Production LLM Apps Need](https://medium.com/@hitarthdesai01/beyond-prompt-engineering-the-ai-systems-layer-production-llm-apps-need-d7fc10d6e9c7).
+
 That is a sensible place to start. The prompt is where the first prototype happens, where the first internal demo lands, and where the first stakeholder starts to believe the product might work.
 
 But the prompt is not where production reliability comes from.
