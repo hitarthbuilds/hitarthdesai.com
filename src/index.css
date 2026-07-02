@@ -637,6 +637,7 @@ a.sb-id:hover { color: var(--ember); }
   display: grid;
   gap: 0.6rem;
 }
+.post-building { margin: 0; max-width: 62ch; line-height: 1.6; }
 
 /* Prose — rendered markdown */
 .prose { font-size: 1.08rem; line-height: 1.75; color: #cfd3d8; }

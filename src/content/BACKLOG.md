@@ -45,6 +45,8 @@ SeerFlow-tagged ones only once real SeerFlow copy exists.
     Angle: the three-way tradeoff in LLM systems and how to reason about it per workload. Terms: cost/token, batching, caching, SLOs.
 
 12. **Why the Reliability Layer Is the Moat, Not the Model**
-    Angle: thesis piece — everyone has the same models; the durable advantage is the systems engineering around them. Ties confident-extract + InfraDock work together. (SeerFlow: fold in here once copy exists.)
+    Angle: thesis piece — everyone has the same models; the durable advantage is the systems engineering around them. Ties confident-extract + SeerFlow + InfraDock together.
 
-13. **SeerFlow deep-dive** — *blocked: needs real SeerFlow facts before drafting.*
+13. ~~SeerFlow deep-dive~~ — **DONE** (`ai-explains-backend-computes-seerflow`, 2026-07-02).
+    Follow-ups teased in that post: the reconciliation engine; the provider-ingestion
+    layer (webhook evidence, sync audits). Facts source: seerflow repo README + seerflow.in.

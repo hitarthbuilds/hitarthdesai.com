@@ -99,7 +99,16 @@ export default function BlogPost() {
             Written by Hitarth Desai, AI Engineer at InfraDock AI.{' '}
             <Link to="/#ship" className="link">Get in touch →</Link>
           </p>
-          {author.building && <p className="post-building">{author.building}</p>}
+          {author.building && (
+            <p className="post-building">
+              {author.building}{' '}
+              {author.buildingLink && (
+                <a className="link" href={author.buildingLink.href}>
+                  {author.buildingLink.label} →
+                </a>
+              )}
+            </p>
+          )}
           <p>
             <Link to="/blog" className="link">← All writing</Link>
           </p>

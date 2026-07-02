@@ -22,7 +22,16 @@ Other HN-shaped ones:
 3. Fixing a bad LLM response by calling the LLM again is an anti-pattern: +1 full latency, 2–3× cost, and it's still non-deterministic. You fixed a dice roll with another dice roll.
 4. confident-extract v0.1.0 does the repair deterministically: noisy LLM/OCR output → typed data, zero LLM round-trips, microsecond latency, a confidence score on every result. msgspec / Pydantic v2 / dataclasses. https://pypi.org/project/confident-extract/
 5. Prompt engineering optimizes the model. AI systems engineering assumes the model fails and builds a system that's reliable anyway. That layer is the moat. Full essay: https://hitarthdesai.com/blog/deterministic-structured-outputs-production-llm-pipelines/
-<!-- SeerFlow: optional closing tweet once real copy exists. -->
+6. I'm applying the same invariant to money at SeerFlow (https://seerflow.in) — cash-flow intelligence for Indian D2C brands where AI explains but a deterministic backend owns every number. Write-up: https://hitarthdesai.com/blog/ai-explains-backend-computes-seerflow/
+
+---
+
+## X / Twitter thread (SeerFlow guardrail post)
+1. SeerFlow's strictest rule has nothing to do with models: no LLM ever produces a financial number. AI explains, the backend computes. New post on the guardrail architecture 🧵 https://hitarthdesai.com/blog/ai-explains-backend-computes-seerflow/
+2. The failure mode of an LLM in a fintech product isn't an awkward answer — it's a fabricated number that looks exactly like a real one. A founder making payroll off a hallucinated cash position is unacceptable at any accuracy level.
+3. So: deterministic services own the forecast/reconciliation. The LLM drafts an explanation. A numeric guardrail rejects any output introducing a figure not in the deterministic input (unit conversions allowed, novel numbers = auto-fail). Deterministic fallback — never fails open.
+4. The ML that IS there (calibrated RTO risk classifier, settlement-delay regressor, anomaly detection) feeds the deterministic layer as scored inputs — it's never a free-text authority. Probabilistic at the edges, deterministic at the core.
+5. Prompts are requests. Guardrails are guarantees. https://seerflow.in
 
 ---
 
@@ -35,5 +44,6 @@ It's also why I built confident-extract (v0.1.0 just shipped): deterministic str
 
 Read: https://hitarthdesai.com/blog/deterministic-structured-outputs-production-llm-pipelines/
 
-#LLM #MLOps #AIEngineering #Python
-<!-- SeerFlow: add one line here once real copy exists. -->
+I'm now applying the same invariant to money at SeerFlow (seerflow.in) — cash-flow intelligence for Indian D2C brands where AI explains but a deterministic backend owns every number: https://hitarthdesai.com/blog/ai-explains-backend-computes-seerflow/
+
+#LLM #MLOps #AIEngineering #Python #Fintech
