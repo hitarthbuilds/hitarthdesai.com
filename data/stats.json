@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-06-14",
+  "generatedAt": "2026-07-02",
   "projects": {
     "confident-extract": {
-      "downloadsMonth": 69,
-      "downloadsLabel": "69 downloads/mo",
-      "version": "v0.1.0a1",
+      "downloadsMonth": 190,
+      "downloadsLabel": "190 downloads/mo",
+      "version": "v0.1.0",
       "stars": 1,
-      "lastPush": "2026-05-12"
+      "lastPush": "2026-07-02"
     }
   }
 }

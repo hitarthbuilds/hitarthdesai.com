@@ -1,6 +1,16 @@
 // Single content source for the site. Copy is from the asset pack (Task 1.3 body,
 // Task 2.1 stack, Task 3 bio facts). All facts real/corroborable. Handles: hitarthbuilds.
 
+// Author identity used in blog post footers. `building` is the single insertion
+// point for a SeerFlow one-liner — left null until real, user-provided copy exists
+// (do not fabricate product claims).
+export const author = {
+  name: 'Hitarth Desai',
+  role: 'AI Engineer',
+  employer: 'InfraDock AI',
+  building: null, // e.g. 'Currently building SeerFlow — <one honest sentence>.'
+};
+
 export const profileLinks = [
   { label: 'GitHub', href: 'https://github.com/hitarthbuilds' },
   { label: 'Hugging Face', href: 'https://huggingface.co/hitarthbuilds' },

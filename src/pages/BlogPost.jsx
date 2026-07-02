@@ -1,6 +1,7 @@
 import { Head } from 'vite-react-ssg';
 import { Link, useParams } from 'react-router-dom';
 import { getPost, formatDate } from '../content/posts';
+import { author } from '../data/content';
 
 function postingLd(post) {
   return {
@@ -98,6 +99,7 @@ export default function BlogPost() {
             Written by Hitarth Desai, AI Engineer at InfraDock AI.{' '}
             <Link to="/#ship" className="link">Get in touch →</Link>
           </p>
+          {author.building && <p className="post-building">{author.building}</p>}
           <p>
             <Link to="/blog" className="link">← All writing</Link>
           </p>
