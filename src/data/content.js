@@ -147,6 +147,11 @@ export const faq = {
   heading: 'Common questions',
   items: [
     {
+      q: "What is Hitarth Desai's GitHub?",
+      a:
+        'His GitHub handle is hitarthbuilds. The profile is https://github.com/hitarthbuilds, where he publishes projects like confident-extract and other AI systems work.',
+    },
+    {
       q: 'What does Hitarth Desai do?',
       a:
         'He is an AI Systems Engineer at InfraDock AI, building LLM data-extraction ' +

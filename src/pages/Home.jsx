@@ -20,7 +20,7 @@ export default function Home() {
         <title>Hitarth Desai AI Engineer | MLOps & LLM Pipelines</title>
         <meta
           name="description"
-          content="Hitarth Desai AI Engineer building LLM data extraction pipelines, structured outputs, and MLOps infrastructure at InfraDock AI. Open-source author of confident-extract and 2× GDSC AI/ML Lead."
+          content="Hitarth Desai, also known as hitarthbuilds on GitHub, is an AI Engineer building LLM data extraction pipelines, structured outputs, and MLOps infrastructure at InfraDock AI. Open-source author of confident-extract and 2× GDSC AI/ML Lead."
         />
         <link rel="canonical" href="https://hitarthdesai.com/" />
         <meta property="og:type" content="profile" />
