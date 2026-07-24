@@ -163,4 +163,3 @@ That is what turns “the model failed” from an incident into a workflow.
 ---
 
 *Written by [Hitarth Desai](https://hitarthdesai.com/) (`hitarthbuilds`), an AI Systems Engineer building reliable LLM extraction and MLOps pipelines. His open-source `confident-extract` package is available on [PyPI](https://pypi.org/project/confident-extract/). `promptcrucible` remains in active development.*
-
