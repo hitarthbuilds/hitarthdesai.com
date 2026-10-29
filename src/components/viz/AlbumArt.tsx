@@ -123,7 +123,8 @@ function GaugeArt() {
   });
   const tick = (a: number, r0: number, r1: number) => {
     const t = ((a - 90) * Math.PI) / 180;
-    return { x1: 100 + Math.cos(t) * r0, y1: 112 + Math.sin(t) * r0, x2: 100 + Math.cos(t) * r1, y2: 112 + Math.sin(t) * r1 };
+    const r2 = (n: number) => Math.round(n * 100) / 100;
+    return { x1: r2(100 + Math.cos(t) * r0), y1: r2(112 + Math.sin(t) * r0), x2: r2(100 + Math.cos(t) * r1), y2: r2(112 + Math.sin(t) * r1) };
   };
   return (
     <div ref={root} className="absolute inset-0 grid place-items-center p-6">
@@ -180,7 +181,7 @@ function GridArt() {
 
 /** SeerFlow: the cash-flow waveform comes from the backend; an invented AI number hits the guardrail. */
 function LedgerArt() {
-  const bars = Array.from({ length: 34 }, (_, i) => 0.35 + 0.4 * Math.abs(Math.sin(i * 0.55)) * (i % 7 === 4 ? 0.3 : 1));
+  const bars = Array.from({ length: 34 }, (_, i) => Math.round((0.35 + 0.4 * Math.abs(Math.sin(i * 0.55)) * (i % 7 === 4 ? 0.3 : 1)) * 1000) / 1000);
   const root = useLoop((tl, q) => {
     tl.set(q("[data-bar]"), { scaleY: 0 }).set(q("[data-claim]"), { autoAlpha: 0, y: 8 }).set(q("[data-reject]"), { autoAlpha: 0 });
     tl.to(q("[data-bar]"), { scaleY: 1, duration: 0.5, stagger: 0.025, ease: "power2.out" })

@@ -20,6 +20,8 @@ export const TRACKS = [
 ] as const;
 
 export type Role = {
+  /** Shown while `dates` is unknown. */
+  when: string;
   title: string;
   org: string;
   summary: string;
@@ -71,22 +73,25 @@ export const PROFILE = {
 
   experience: [
     {
+      when: "Now",
       title: "AI Systems Engineer",
       org: "InfraDock AI",
-      summary: "Designing LLM-powered document-processing pipelines.",
+      summary: "Designing LLM-powered document-processing pipelines: turning probabilistic model output into structured data downstream services can trust, fast and observable enough to run under real load.",
       current: true,
       dates: null,
     },
     {
-      title: "AI/ML Lead (2 terms)",
+      when: "Previously",
+      title: "2× AI/ML Lead",
       org: "GDSC Surat",
       summary: "Taught and built with a few hundred student engineers over two terms.",
       dates: null,
     },
     {
+      when: "Earlier",
       title: "Backend & systems",
       org: "Independent / contract",
-      summary: "Event-driven backtesting infrastructure and microservice platforms.",
+      summary: "Shipped production systems ranging from event-driven backtesting infrastructure to microservice platforms.",
       dates: null,
     },
   ] satisfies Role[],
@@ -99,6 +104,10 @@ export const PROFILE = {
     Infra: ["Docker", "Kubernetes", "Terraform", "Kafka", "Microservices"],
     MLOps: ["Async pipelines", "Batching", "Eval harnesses", "Observability"],
   } as Record<string, string[]>,
+
+  /** From the current site's "Off the clock" copy. */
+  offStage:
+    "International gold-medalist powerlifter. I play guitar and perform live, mostly metal and hard rock. The discipline of progressive overload turns out to map surprisingly well onto debugging distributed systems.",
 
   achievements: [
     "International gold-medal powerlifter",

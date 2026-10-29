@@ -5,6 +5,7 @@ import "./globals.css";
 import { Providers } from "@/components/layout/Providers";
 import { Header } from "@/components/layout/Header";
 import { Preloader } from "@/components/layout/Preloader";
+import { Footer } from "@/components/layout/Footer";
 import { PROFILE } from "@/content/profile";
 
 const sans = Geist({ subsets: ["latin"], variable: "--ff-sans", display: "swap" });
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </a>
           <Header />
           <main id="main">{children}</main>
+          <Footer />
         </Providers>
         <Preloader />
         <div className="grain" aria-hidden />

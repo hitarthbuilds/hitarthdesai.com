@@ -679,3 +679,406 @@ html[data-pl] .preloader {
     transform: translateX(34%);
   }
 }
+
+/* ───────────────────────── The Rig ───────────────────────── */
+/* Woven band patches: filled (embroidered chrome) and outlined. */
+.patch {
+  display: inline-flex;
+  align-items: center;
+  height: clamp(56px, 7vw, 92px);
+  padding: 0 clamp(18px, 2.4vw, 34px);
+  border-radius: 10px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(28px, 4.2vw, 60px);
+  letter-spacing: -0.04em;
+  font-variation-settings: "wdth" 80;
+  white-space: nowrap;
+}
+.patch-fill {
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.1) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #2a2e35, #15171b);
+  border: 2px dashed rgba(233, 237, 242, 0.25);
+  outline: 4px solid #101216;
+  color: var(--chrome);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25), 0 -1px 0 rgba(0, 0, 0, 0.8);
+}
+.patch-outline {
+  color: var(--void);
+  -webkit-text-fill-color: var(--void);
+  -webkit-text-stroke: 1.5px rgba(255, 106, 26, 0.7);
+  paint-order: stroke fill;
+  border: 1px solid rgba(255, 106, 26, 0.25);
+}
+/* 19" rack unit: screw ears, brushed faceplate. */
+.rack {
+  display: flex;
+  align-items: stretch;
+  border-radius: 8px;
+  border: 1px solid var(--line-2);
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #17191d, #0e0f12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 0 rgba(0, 0, 0, 0.6);
+}
+.rack-ear {
+  width: 26px;
+  flex: none;
+  background:
+    radial-gradient(circle at 50% 22%, #6a717c 0 2.5px, #1a1c20 3.5px, transparent 4.5px),
+    radial-gradient(circle at 50% 78%, #6a717c 0 2.5px, #1a1c20 3.5px, transparent 4.5px),
+    linear-gradient(180deg, #202329, #121417);
+  border-inline: 1px solid var(--line);
+}
+.rack-chip {
+  border-radius: 6px;
+  border: 1px solid var(--line-2);
+  background: rgba(8, 9, 11, 0.55);
+  padding: 7px 12px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--chrome);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.rack-chip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.16) 50%, transparent 65%);
+  transform: translateX(-120%);
+  transition: transform 0.7s var(--ease-out);
+}
+.rack-chip:hover {
+  border-color: rgba(255, 106, 26, 0.6);
+}
+.rack-chip:hover::after {
+  transform: translateX(120%);
+}
+
+/* ───────────────────────── Tour ───────────────────────── */
+.headliner {
+  background: var(--forge) !important;
+  animation: headliner 1.6s var(--ease-out) infinite;
+}
+@keyframes headliner {
+  0% { box-shadow: 0 0 0 0 rgba(255, 106, 26, 0.7); }
+  100% { box-shadow: 0 0 0 14px rgba(255, 106, 26, 0); }
+}
+
+/* ───────────────────────── Soundcheck ───────────────────────── */
+.faq {
+  border: 1px solid var(--line-2);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #121316, #0c0d0f);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: border-color 0.3s;
+}
+.faq[open] {
+  border-color: rgba(255, 106, 26, 0.45);
+}
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+.faq-plus {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  transition: transform 0.45s var(--ease-spring), background 0.3s, border-color 0.3s;
+}
+.faq-plus::before,
+.faq-plus::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 1.5px;
+  margin: -0.75px 0 0 -6px;
+  background: var(--chrome);
+}
+.faq-plus::after {
+  transform: rotate(90deg);
+}
+.faq[open] .faq-plus {
+  transform: rotate(45deg);
+  background: var(--forge);
+  border-color: var(--forge);
+}
+.faq[open] .faq-plus::before,
+.faq[open] .faq-plus::after {
+  background: var(--void);
+}
+/* The answer pings in like a cymbal hit. */
+.faq[open] .faq-answer {
+  animation: ping-in 0.5s var(--ease-spring);
+  transform-origin: top left;
+}
+@keyframes ping-in {
+  0% { opacity: 0; transform: scale(0.96) translateY(-6px); }
+  60% { opacity: 1; transform: scale(1.01); }
+  100% { transform: none; }
+}
+
+/* ───────────────────────── Liner notes ───────────────────────── */
+.lyric-sheet {
+  padding: 18px 20px;
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 23px, rgba(255, 255, 255, 0.04) 23px 24px),
+    linear-gradient(180deg, #17181c, #0f1013);
+  border: 1px solid var(--line-2);
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.9);
+}
+
+/* ───────────────────────── Medal ───────────────────────── */
+.medal-wrap {
+  --mx: 50%;
+  --my: 30%;
+}
+.medal-ribbon {
+  height: 90px;
+  margin: 0 auto -18px;
+  width: 140px;
+  background: linear-gradient(90deg, #d9142b 0 33%, #e9edf2 33% 66%, #d9142b 66%);
+  clip-path: polygon(0 0, 100% 0, 78% 100%, 50% 82%, 22% 100%);
+  filter: brightness(0.85);
+}
+.medal {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  padding: 14px;
+  background: radial-gradient(circle at 35% 30%, #f7e2a1, #d9b45a 45%, #8a6a23 85%);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.6), inset 0 -6px 14px rgba(0, 0, 0, 0.35), 0 30px 60px -20px rgba(0, 0, 0, 0.9), 0 0 60px -10px rgba(217, 180, 90, 0.35);
+  overflow: hidden;
+}
+.medal-inner {
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid rgba(61, 47, 12, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 40% 35%, #f3d98c, #c99d3e);
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.3), inset 0 -2px 0 rgba(255, 255, 255, 0.35);
+}
+.medal-foil {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+  background:
+    radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.85), transparent 38%),
+    linear-gradient(115deg, transparent calc(var(--mx) - 20%), rgba(255, 255, 255, 0.6) var(--mx), transparent calc(var(--mx) + 20%));
+}
+
+/* ───────────────────────── Encore ───────────────────────── */
+.encore-btn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(200px, 22vw, 260px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  color: var(--void);
+  background: radial-gradient(circle at 35% 30%, #ffb08a, var(--forge) 45%, #b8400a 90%);
+  box-shadow: inset 0 2px 0 rgba(255, 230, 200, 0.6), inset 0 -8px 18px rgba(0, 0, 0, 0.3), 0 30px 80px -20px rgba(255, 106, 26, 0.65);
+  transition: transform 0.5s var(--ease-spring), box-shadow 0.4s;
+  isolation: isolate;
+}
+.encore-btn::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 106, 26, 0.45);
+  animation: spin 18s linear infinite;
+}
+.encore-btn:hover {
+  transform: scale(1.04);
+  box-shadow: inset 0 2px 0 rgba(255, 230, 200, 0.6), inset 0 -8px 18px rgba(0, 0, 0, 0.3), 0 40px 100px -16px rgba(255, 106, 26, 0.85);
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 999px;
+  background: var(--ember);
+  box-shadow: 0 0 10px var(--forge);
+}
+
+/* ───────────────────────── Footer wordmark ───────────────────────── */
+/* Outlined blackletter: a solid --void fill painted over the stroke keeps contours clean. */
+.footer-wordmark {
+  font-family: var(--font-black);
+  font-weight: 700;
+  font-size: 25vw;
+  line-height: 0.95;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--void);
+  -webkit-text-fill-color: var(--void);
+  -webkit-text-stroke: 2px rgba(233, 237, 242, 0.22);
+  paint-order: stroke fill;
+}
+.footer-wordmark .fw-char {
+  transform-origin: 50% 85%;
+  transition: -webkit-text-stroke-color 0.4s;
+}
+.footer-wordmark .fw-char.is-lit {
+  background: var(--chrome-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-color: transparent;
+}
+
+/* ───────────────────────── Long-form ───────────────────────── */
+.prose-liner {
+  max-width: 46rem;
+  color: rgba(233, 237, 242, 0.8);
+  font-size: 18px;
+  line-height: 1.75;
+}
+.prose-liner > * + * {
+  margin-top: 1.15em;
+}
+.prose-liner h2,
+.prose-liner h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--chrome);
+  line-height: 1.08;
+  scroll-margin-top: 110px;
+}
+.prose-liner h2 {
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  margin-top: 2.2em;
+}
+.prose-liner h3 {
+  font-size: 1.35rem;
+  margin-top: 1.8em;
+}
+.prose-liner a {
+  color: var(--chrome);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 106, 26, 0.6);
+  text-underline-offset: 4px;
+}
+.prose-liner a:hover {
+  color: var(--ember);
+}
+.prose-liner strong {
+  color: var(--chrome);
+}
+.prose-liner ul,
+.prose-liner ol {
+  padding-left: 1.3em;
+}
+.prose-liner ul {
+  list-style: none;
+}
+.prose-liner ul li {
+  position: relative;
+}
+.prose-liner ul li::before {
+  content: "";
+  position: absolute;
+  left: -1.1em;
+  top: 0.72em;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--forge);
+  transform: rotate(45deg);
+}
+.prose-liner ol {
+  list-style: decimal;
+}
+.prose-liner li + li {
+  margin-top: 0.4em;
+}
+.prose-liner blockquote {
+  border-left: 3px solid var(--forge);
+  padding-left: 1.2em;
+  color: var(--chrome);
+  font-style: italic;
+}
+.prose-liner :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  padding: 0.12em 0.4em;
+  border-radius: 5px;
+  background: var(--steel-2);
+  border: 1px solid var(--line);
+  color: var(--ember);
+}
+.prose-liner table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+.prose-liner th,
+.prose-liner td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.6em 0.8em;
+  text-align: left;
+}
+.prose-liner th {
+  color: var(--chrome);
+}
+.code-block {
+  position: relative;
+}
+.code-block .shiki {
+  background: linear-gradient(180deg, #14161a, #0f1013) !important;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  padding: 1.1em 1.3em;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.65;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  background: rgba(8, 9, 11, 0.8);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--mute);
+  opacity: 0;
+  transition: opacity 0.2s, color 0.2s;
+}
+.code-block:hover .copy-btn,
+.copy-btn:focus-visible {
+  opacity: 1;
+}
+.copy-btn:hover {
+  color: var(--chrome);
+}
+[data-toc-link][data-active] {
+  color: var(--forge);
+  border-color: var(--forge);
+  padding-left: 0.6em;
+}

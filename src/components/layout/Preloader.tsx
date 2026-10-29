@@ -62,6 +62,8 @@ function sparks(canvas: HTMLCanvasElement, ox: number, oy: number) {
   requestAnimationFrame(frame);
 }
 
+const r2 = (n: number) => Math.round(n * 100) / 100;
+
 /** A chicken-head amp knob with a 0–11 scale. */
 function Knob() {
   return (
@@ -70,8 +72,8 @@ function Knob() {
         const a = ((-SWEEP / 2 + (SWEEP / 11) * i - 90) * Math.PI) / 180;
         return (
           <g key={i}>
-            <line x1={60 + Math.cos(a) * 46} y1={60 + Math.sin(a) * 46} x2={60 + Math.cos(a) * 52} y2={60 + Math.sin(a) * 52} stroke={i === 11 ? "#ff6a1a" : "#6a717c"} strokeWidth={i === 11 ? 2.4 : 1.4} />
-            <text x={60 + Math.cos(a) * 58} y={60 + Math.sin(a) * 58 + 2.5} textAnchor="middle" className="font-mono" fontSize="7" fill={i === 11 ? "#ff6a1a" : "#6a717c"}>
+            <line x1={r2(60 + Math.cos(a) * 46)} y1={r2(60 + Math.sin(a) * 46)} x2={r2(60 + Math.cos(a) * 52)} y2={r2(60 + Math.sin(a) * 52)} stroke={i === 11 ? "#ff6a1a" : "#6a717c"} strokeWidth={i === 11 ? 2.4 : 1.4} />
+            <text x={r2(60 + Math.cos(a) * 58)} y={r2(60 + Math.sin(a) * 58 + 2.5)} textAnchor="middle" className="font-mono" fontSize="7" fill={i === 11 ? "#ff6a1a" : "#6a717c"}>
               {i}
             </text>
           </g>
