@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   title: { default: `${PROFILE.name} · ${PROFILE.title}`, template: `%s · ${PROFILE.name}` },
   description: `${PROFILE.tagline} ${PROFILE.bio}`,
   alternates: { canonical: "/" },
+  openGraph: { type: "website", siteName: PROFILE.name, title: `${PROFILE.name} · ${PROFILE.title}`, description: PROFILE.tagline, url: PROFILE.url, images: [{ url: "/og.png", width: 1200, height: 630 }] },
+  twitter: { card: "summary_large_image", site: "@hitarthbuilds", creator: "@hitarthbuilds", images: ["/og.png"] },
   robots: IS_CANONICAL_HOST ? { index: true, follow: true } : { index: false, follow: false },
 };
 
