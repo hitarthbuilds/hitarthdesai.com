@@ -1,0 +1,5 @@
+# The site is hosted on Vercel now (Next.js). This repo is still linked to the old Netlify
+# site, so tell Netlify to skip every build: its last deploy keeps serving until DNS moves to
+# Vercel. Delete this file once the Netlify site is removed.
+[build]
+  ignore = "exit 0"
