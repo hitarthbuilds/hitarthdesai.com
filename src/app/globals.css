@@ -16,6 +16,7 @@
   --titanium: #7fb6ff;
   --gold: #d9b45a;
   --rust: #c2410c;
+  --blood: #d9142b;
   --radius: 18px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -38,10 +39,11 @@
   --color-titanium: var(--titanium);
   --color-gold: var(--gold);
   --color-rust: var(--rust);
+  --color-blood: var(--blood);
   --font-sans: var(--ff-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--ff-mono), ui-monospace, SFMono-Regular, monospace;
   --font-display: var(--ff-display), var(--ff-sans), sans-serif;
-  --font-serif: var(--ff-serif), Georgia, serif;
+  --font-black: var(--ff-black), Georgia, serif;
 }
 
 /* ───────────────────────── Base ───────────────────────── */
@@ -180,11 +182,13 @@ html.lenis body {
   line-height: 0.88;
   font-variation-settings: "wdth" 80, "opsz" 96;
 }
-.serif-i {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-  letter-spacing: -0.02em;
+/* Blackletter accents: the metal-logo voice. Used for single words, never body copy. */
+.blackletter {
+  font-family: var(--font-black);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.01em;
+  font-variation-settings: normal;
 }
 .eyebrow {
   font-family: var(--font-mono);
@@ -233,6 +237,10 @@ html.lenis body {
   padding: 0.16em 0 0.12em;
   margin: -0.16em 0 -0.12em;
 }
+.hl .hl-accent {
+  font-size: 1.04em;
+  line-height: 0.85;
+}
 .hl .hl-accent .ch-mask {
   padding-inline: 0.12em;
   margin-inline: -0.12em;
@@ -241,7 +249,7 @@ html.lenis body {
 /* Heated metal. The hero animates color/text-shadow from white-hot to forge with GSAP. */
 .molten {
   color: var(--forge);
-  text-shadow: 0 0 18px rgba(255, 106, 26, 0.35);
+  text-shadow: 0 0 18px rgba(255, 106, 26, 0.35), 0 0 46px rgba(217, 20, 43, 0.18);
 }
 
 /* Variable fonts expose overlapping contours under a transparent-fill stroke:

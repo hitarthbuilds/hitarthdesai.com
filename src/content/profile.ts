@@ -6,6 +6,19 @@
 
 export type Social = { id: "github" | "huggingface" | "linkedin" | "x" | "pypi"; label: string; handle: string; href: string };
 
+/** The homepage is a record: each section is a track. `was` is the old site's section name. */
+export const TRACKS = [
+  { n: "01", id: "overture", name: "Overture", was: "Source" },
+  { n: "02", id: "signal-chain", name: "Signal Chain", was: "Extract" },
+  { n: "03", id: "discography", name: "Discography", was: "Structure" },
+  { n: "04", id: "rig", name: "The Rig", was: "Stack" },
+  { n: "05", id: "tour", name: "Tour History", was: "Trace" },
+  { n: "06", id: "soundcheck", name: "Soundcheck", was: "Query" },
+  { n: "07", id: "liner-notes", name: "Liner Notes", was: "Publish" },
+  { n: "08", id: "iron-and-strings", name: "Iron & Strings", was: "Signal" },
+  { n: "09", id: "encore", name: "Encore", was: "Ship" },
+] as const;
+
 export type Role = {
   title: string;
   org: string;
@@ -32,6 +45,7 @@ export const PROFILE = {
     [{ text: "production." }],
   ] as { text: string; accent?: boolean }[][],
   motto: "Forged, not demoed",
+  guitar: "Schecter Demon-6",
 
   status: {
     open: true,

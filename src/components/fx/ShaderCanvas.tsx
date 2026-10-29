@@ -14,6 +14,7 @@ const VERT = `attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
  *  2. normals from finite differences, view vector reflected off them
  *  3. shaded with a procedural studio (softbox bands, dark floor, cool blue rim) + Schlick fresnel
  *  4. pointer heat dents the surface and glows forge → ember, cooling back to chrome
+ *  5. stage fire flickers up from the bottom edge and reflects in downward-facing slopes
  * Every smoothstep keeps edge0 < edge1 (reversed edges are undefined behaviour), and the
  * final colour is clamped.
  */
@@ -61,6 +62,7 @@ vec3 env(vec3 R){
   c+=vec3(.90,.94,1.)*b2*.75;
   c+=vec3(.70,.74,.80)*b3*.30;
   c+=vec3(.18,.40,.95)*smoothstep(.40,.95,abs(x))*.50;
+  c+=vec3(.60,.13,.05)*(1.-smoothstep(-.8,-.28,y))*.75;
   return c;
 }
 vec3 heatCol(float k){
@@ -95,6 +97,12 @@ void main(){
   col=mix(col,col*hc*2.2+hc*.22*k,hk);
 
   col*=1.-.6*smoothstep(.3,1.25,length(p*vec2(.78,1.)));
+
+  // Stage fire licking up from below the frame.
+  float fl=fbm(vec2(p.x*2.4,p.y*1.6-t*.85)+r*.6);
+  float low=1.-smoothstep(-.5,.02,p.y);
+  vec3 fire=mix(vec3(.85,.08,.17),vec3(1.,.42,.1),smoothstep(.45,.8,fl));
+  col+=fire*low*low*smoothstep(.38,.82,fl)*.5;
   col=clamp(col*u_fade,0.,1.);
   col+=(hash(gl_FragCoord.xy+t)-.5)/255.;
   gl_FragColor=vec4(clamp(col,0.,1.),1.);

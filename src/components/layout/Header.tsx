@@ -4,12 +4,13 @@ import Link from "next/link";
 import { useRef } from "react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { PROFILE } from "@/content/profile";
+import { amp, useAmp } from "@/lib/amp";
 import { onPreloaderDone } from "./Preloader";
 
 const NAV = [
-  { href: "/#forge", label: "Work" },
-  { href: "/#alloy", label: "Stack" },
-  { href: "/#temper", label: "Experience" },
+  { href: "/#discography", label: "Work" },
+  { href: "/#rig", label: "Stack" },
+  { href: "/#tour", label: "Experience" },
   { href: "/blog", label: "Writing" },
 ];
 
@@ -38,6 +39,27 @@ export function Wordmark() {
   );
 }
 
+/** Sound toggle styled as an amp's standby switch. Off by default; the choice is remembered. */
+function AmpSwitch() {
+  const on = useAmp();
+  return (
+    <button
+      type="button"
+      aria-pressed={on}
+      aria-label={on ? "Amp on: turn site sound off" : "Amp off: turn site sound on"}
+      onClick={() => void amp.set(!on).then(() => amp.power(82.41, 0.9))}
+      className="group flex h-10 items-center gap-2.5 rounded-full border border-line bg-steel-1/60 pl-3 pr-3.5 font-mono text-[11px] uppercase tracking-[0.18em] text-mute transition-colors hover:border-line-2 hover:text-chrome"
+      data-cursor={on ? "standby" : "plug in"}
+    >
+      <span className={`h-2 w-2 rounded-full transition-all ${on ? "bg-blood shadow-[0_0_10px_2px_rgba(217,20,43,.8)]" : "bg-steel-3"}`} aria-hidden />
+      Amp
+      <span className="relative h-4 w-7 rounded-full border border-line-2 bg-void" aria-hidden>
+        <span className={`absolute top-[2px] h-2.5 w-2.5 rounded-full bg-chrome transition-all duration-300 ${on ? "left-[13px]" : "left-[2px]"}`} />
+      </span>
+    </button>
+  );
+}
+
 export function Header() {
   const bar = useRef<HTMLElement>(null);
 
@@ -51,8 +73,8 @@ export function Header() {
       onUpdate: (self) => {
         const y = self.scroll();
         el.dataset.scrolled = String(y > 24);
-        if (y > 240 && self.direction === 1) gsap.to(el, { yPercent: -120, duration: 0.5, ease: "power3.out", overwrite: true });
-        else if (self.direction === -1) gsap.to(el, { yPercent: 0, duration: 0.5, ease: "power3.out", overwrite: true });
+        if (y > 240 && self.direction === 1) gsap.to(el, { yPercent: -120, duration: 0.5, ease: "power3.out", overwrite: "auto" });
+        else if (self.direction === -1) gsap.to(el, { yPercent: 0, duration: 0.5, ease: "power3.out", overwrite: "auto" });
       },
     });
     return () => {
@@ -78,7 +100,10 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <Link href="/#strike" className="btn btn-steel ml-auto !h-10 !px-4 !text-[13px] md:ml-0">
+        <div className="ml-auto md:ml-0">
+          <AmpSwitch />
+        </div>
+        <Link href="/#encore" className="btn btn-steel hidden !h-10 !px-4 !text-[13px] sm:inline-flex">
           <span className="btn-fill" />
           Let&apos;s talk
         </Link>

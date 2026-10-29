@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { gsap, isTouch, prefersReduced } from "@/lib/gsap";
 
 /**
- * A chrome ring (difference-blended) plus a forge-orange dot, with a label pill over
+ * A chrome ring (difference-blended) plus a forge-orange guitar pick, with a label pill over
  * [data-cursor="…"] elements. The native cursor stays visible: this is decoration only.
  */
 export function Cursor() {
@@ -71,7 +71,13 @@ export function Cursor() {
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-[80] hidden md:block">
       <div ref={ring} className="fixed left-0 top-0 h-9 w-9 rounded-full border-[1.5px] border-[#e9edf2]/80 mix-blend-difference" />
-      <div ref={dot} className="fixed left-0 top-0 h-1.5 w-1.5 rounded-full bg-forge shadow-[0_0_8px_var(--forge)]" />
+      <div ref={dot} className="fixed left-0 top-0 h-3.5 w-3 drop-shadow-[0_0_6px_rgba(255,106,26,.7)]">
+        {/* Guitar pick */}
+        <svg viewBox="0 0 24 28" className="h-full w-full -rotate-[18deg]">
+          <path d="M12 1C18.5 1 23 3.2 23 8.3 23 15 15.6 23.8 12 27 8.4 23.8 1 15 1 8.3 1 3.2 5.5 1 12 1Z" fill="#ff6a1a" />
+          <path d="M6 5.5C8 4.6 10 4.3 12 4.3" stroke="#ffd2a8" strokeWidth="1.6" strokeLinecap="round" fill="none" opacity=".8" />
+        </svg>
+      </div>
       <div ref={pill} className="fixed left-0 top-0 rounded-full bg-forge px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-void">
         <span ref={pillText} />
       </div>

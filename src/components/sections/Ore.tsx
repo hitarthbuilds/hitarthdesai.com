@@ -4,7 +4,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRef } from "react";
 import { gsap, SplitText, prefersReduced, useGSAP } from "@/lib/gsap";
-import { PROFILE } from "@/content/profile";
+import { PROFILE, TRACKS } from "@/content/profile";
 import { Magnetic } from "../fx/Magnetic";
 import { onPreloaderDone } from "../layout/Preloader";
 import { Anvil, ArrowRight, SocialIcon } from "../ui/Icons";
@@ -14,7 +14,7 @@ const FilingsField = dynamic(() => import("../fx/FilingsField").then((m) => m.Fi
 
 const HEADLINE_TEXT = PROFILE.headline.map((l) => l.map((s) => s.text).join("")).join(" ");
 
-/** 01 / Ore: liquid-chrome shader, iron-filings field and the headline. */
+/** Track 01 / Overture: liquid-chrome stage, iron-filings field and the headline. */
 export function Ore() {
   const root = useRef<HTMLElement>(null);
 
@@ -49,11 +49,11 @@ export function Ore() {
         if (accent)
           tl.fromTo(
             accent,
-            { color: "#fff6e8", textShadow: "0 0 22px rgba(255,236,205,0.95), 0 0 70px rgba(255,140,40,0.9)" },
+            { color: "#fff6e8", textShadow: "0 0 22px rgba(255,236,205,0.95), 0 0 70px rgba(255,106,26,0.9)" },
             {
               keyframes: [
-                { color: "#ffb547", textShadow: "0 0 18px rgba(255,181,71,0.75), 0 0 50px rgba(255,106,26,0.6)", duration: 0.45, ease: "power1.out" },
-                { color: "#ff6a1a", textShadow: "0 0 18px rgba(255,106,26,0.35), 0 0 40px rgba(255,106,26,0.1)", duration: 0.85, ease: "power2.out" },
+                { color: "#ffb547", textShadow: "0 0 18px rgba(255,181,71,0.75), 0 0 50px rgba(217,20,43,0.6)", duration: 0.45, ease: "power1.out" },
+                { color: "#ff6a1a", textShadow: "0 0 18px rgba(255,106,26,0.35), 0 0 46px rgba(217,20,43,0.18)", duration: 0.85, ease: "power2.out" },
               ],
             },
             0.75,
@@ -79,7 +79,7 @@ export function Ore() {
   );
 
   return (
-    <section ref={root} id="ore" aria-labelledby="ore-title" className="relative isolate min-h-[100svh] overflow-hidden">
+    <section ref={root} id={TRACKS[0].id} aria-labelledby="overture-title" className="relative isolate min-h-[100svh] overflow-hidden">
       <div data-shader className="absolute inset-0 -z-30">
         <ShaderCanvas />
       </div>
@@ -94,21 +94,23 @@ export function Ore() {
 
       <div data-hero-copy className="mx-auto flex min-h-[100svh] max-w-[1440px] flex-col justify-center px-5 pb-16 pt-24 sm:px-8 lg:px-12">
         <p data-hero-in className="eyebrow flex items-center gap-3">
-          <span className="text-forge">01 / Ore</span>
+          <span className="text-forge">
+            Track {TRACKS[0].n} / {TRACKS[0].name}
+          </span>
           <span className="h-px w-8 bg-line-2" />
           <span>
             {PROFILE.name} · {PROFILE.title} · {PROFILE.location.city}, {PROFILE.location.countryCode}
           </span>
         </p>
 
-        <h1 id="ore-title" className="display hl mt-6 text-[min(clamp(3.2rem,10.5vw,11rem),15vh)]">
+        <h1 id="overture-title" className="display hl mt-6 text-[min(clamp(3.2rem,10.5vw,11rem),15vh)]">
           <span className="sr-only">{HEADLINE_TEXT}</span>
           <span aria-hidden>
             {PROFILE.headline.map((line, i) => (
               <span key={i} className="block">
                 {line.map((seg, j) =>
                   seg.accent ? (
-                    <span key={j} data-seg data-accent className="serif-i molten hl-accent pr-[0.04em] font-normal">
+                    <span key={j} data-seg data-accent className="blackletter molten hl-accent pr-[0.04em]">
                       {seg.text}
                     </span>
                   ) : (
@@ -138,13 +140,13 @@ export function Ore() {
           <div data-hero-in className="flex flex-col items-start gap-6 lg:items-end">
             <div className="flex flex-wrap gap-3">
               <Magnetic>
-                <Link href="/#forge" className="btn btn-forge !h-14 !px-7 !text-[16px]" data-cursor="03 / forge">
+                <Link href="/#discography" className="btn btn-forge !h-14 !px-7 !text-[16px]" data-cursor="discography">
                   See the work
                   <ArrowRight />
                 </Link>
               </Magnetic>
               <Magnetic>
-                <Link href="/blog" className="btn btn-steel !h-14 !px-7 !text-[16px]" data-cursor="press">
+                <Link href="/blog" className="btn btn-steel !h-14 !px-7 !text-[16px]" data-cursor="liner notes">
                   <span className="btn-fill" />
                   Read the writing
                 </Link>
@@ -168,10 +170,10 @@ export function Ore() {
       <div data-hero-in className="pointer-events-none absolute right-8 top-24 hidden h-32 w-32 lg:block xl:right-12">
         <svg data-ring viewBox="0 0 100 100" className="h-full w-full" aria-hidden>
           <defs>
-            <path id="ore-ring" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
+            <path id="overture-ring" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
           </defs>
           <text className="fill-mute font-mono text-[8.2px] uppercase tracking-[0.28em]">
-            <textPath href="#ore-ring">Forged not demoed · Forged not demoed · </textPath>
+            <textPath href="#overture-ring">Forged not demoed · Forged not demoed · </textPath>
           </text>
         </svg>
         <span className="absolute inset-0 grid place-items-center text-forge">

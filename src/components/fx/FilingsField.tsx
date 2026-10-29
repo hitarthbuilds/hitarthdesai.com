@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { prefersReduced } from "@/lib/gsap";
 
 /** Shapes the filings assemble into, in order. */
-const GLYPHS = ["monogram", "braces", "arrow", "plate"] as const;
+const GLYPHS = ["monogram", "horns", "braces", "guitar", "plate"] as const;
 type Glyph = (typeof GLYPHS)[number];
 
 /** Steel shades (cold) and two heat colours; each gets a row of pre-rotated sprites. */
@@ -28,7 +28,9 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
     const ctx = canvas.getContext("2d")!;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     const still = prefersReduced();
-    const display = getComputedStyle(document.documentElement).getPropertyValue("--ff-display").trim() || "system-ui, sans-serif";
+    const css = getComputedStyle(document.documentElement);
+    const display = css.getPropertyValue("--ff-display").trim() || "system-ui, sans-serif";
+    const blackletter = css.getPropertyValue("--ff-black").trim() || "serif";
 
     // Sprite atlas: one row per colour, one column per angle across [0, π).
     const cell = Math.ceil(SPRITE * dpr);
@@ -66,26 +68,57 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
     const drawGlyph = (g: CanvasRenderingContext2D, glyph: Glyph, w: number, h: number) => {
       g.fillStyle = "#fff";
       const cx = w * 0.56, cy = h * 0.47, bw = w * 0.72, bh = h * 0.6, m = Math.min(bw, bh);
-      if (glyph === "monogram" || glyph === "braces") {
-        const text = glyph === "monogram" ? "HD" : "{ }";
+      const text = (str: string, font: string, weight = 800) => {
         let size = bh;
-        g.font = `800 ${size}px ${display}`;
-        const mw = g.measureText(text).width;
+        g.font = `${weight} ${size}px ${font}`;
+        const mw = g.measureText(str).width;
         if (mw > bw) size *= bw / mw;
-        g.font = `800 ${size}px ${display}`;
+        g.font = `${weight} ${size}px ${font}`;
         g.textAlign = "center";
         g.textBaseline = "middle";
-        g.fillText(text, cx, cy + size * 0.04);
-      } else if (glyph === "arrow") {
-        const len = Math.min(bw, m * 1.6), th = m * 0.13, head = m * 0.36;
-        const x0 = cx - len / 2, x1 = cx + len / 2;
-        g.fillRect(x0, cy - th / 2, len - head * 0.7, th);
+        g.fillText(str, cx, cy + size * 0.04);
+      };
+      if (glyph === "monogram") text("HD", blackletter, 700);
+      else if (glyph === "braces") text("{ }", display);
+      else if (glyph === "horns") text("\u{1F918}", `"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`, 400);
+      else if (glyph === "guitar") {
+        // Six-string superstrat in a 100×40 box: double-cut body, neck, pointed 6-in-line head.
+        const k = Math.min(bw / 100, bh / 40) * 0.98;
+        g.save();
+        g.translate(cx, cy);
+        g.rotate(-0.2);
+        g.scale(k, k);
+        g.translate(-50, -20);
         g.beginPath();
-        g.moveTo(x1, cy);
-        g.lineTo(x1 - head, cy - head * 0.62);
-        g.lineTo(x1 - head, cy + head * 0.62);
+        g.ellipse(15, 20, 13, 14.5, 0, 0, Math.PI * 2);
+        g.ellipse(28, 20, 10, 11.5, 0, 0, Math.PI * 2);
+        g.fill();
+        g.beginPath();
+        g.moveTo(24, 11);
+        g.quadraticCurveTo(33, 4, 42, 6.5);
+        g.quadraticCurveTo(36, 10, 34, 17);
+        g.closePath();
+        g.moveTo(24, 29);
+        g.quadraticCurveTo(32, 35, 39, 33);
+        g.quadraticCurveTo(34, 29, 33, 23);
         g.closePath();
         g.fill();
+        g.fillRect(32, 17.9, 54, 4.2);
+        g.beginPath();
+        g.moveTo(85, 17.4);
+        g.lineTo(99, 12.5);
+        g.lineTo(98, 16.5);
+        g.lineTo(88, 23);
+        g.lineTo(85, 22.6);
+        g.closePath();
+        g.fill();
+        // Pickups and bridge knocked out so it reads as a guitar, not a blob.
+        g.globalCompositeOperation = "destination-out";
+        g.fillRect(17, 14, 3, 12);
+        g.fillRect(25, 14, 3, 12);
+        g.fillRect(9, 15, 2, 10);
+        g.globalCompositeOperation = "source-over";
+        g.restore();
       } else {
         // Competition plate, face-on: rim, groove, raised hub, sleeve hole.
         const R = m * 0.5;
@@ -127,7 +160,9 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
     };
 
     const assign = (burst: boolean) => {
-      const pts = sample(GLYPHS[glyphIdx % GLYPHS.length]);
+      let pts = sample(GLYPHS[glyphIdx % GLYPHS.length]);
+      // A platform without colour emoji yields almost nothing for 🤘: skip to the next shape.
+      for (let tries = 1; pts.length < 400 && tries < GLYPHS.length; tries++) pts = sample(GLYPHS[++glyphIdx % GLYPHS.length]);
       if (!pts.length) return;
       parts.forEach((p, i) => {
         const t = pts[i % pts.length];
@@ -283,7 +318,7 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
     }
     // The monogram needs the display face; re-sample once it has loaded.
     let alive = true;
-    document.fonts?.load(`800 100px ${display}`).then(() => alive && glyphIdx === 0 && resize());
+    Promise.all([document.fonts?.load(`800 100px ${display}`), document.fonts?.load(`700 100px ${blackletter}`)]).then(() => alive && glyphIdx === 0 && resize());
     sync();
 
     return () => {

@@ -8,6 +8,19 @@ You are building the new personal portfolio for **Hitarth Desai** at **hitarthde
 
 The concept: **reliable AI systems are forged, not demoed.** Hitarth hardens LLMs for production, and he is an international gold-medal powerlifter. Iron is literal and metaphorical. Every section is a stage in forging metal, which mirrors his raw-text → structured-output pipeline work.
 
+> ### Revision 1 (2026-10-29, from Hitarth): "metal" means heavy metal, the music. Take it to max.
+> Hitarth plays guitar (Schecter Demon-6). The site is a **heavy-metal record by an AI Systems Engineer**: the chrome, molten and iron language stays (it is classic metal-album art), but the frame is an album, and his role must stay unmistakable on every screen (hero eyebrow, status pill, intro, page titles).
+> Where this revision conflicts with anything below, the revision wins.
+> - **Tracklist, not forging stages.** Sections are tracks; keep the old site's names as small subtitles:
+>   01 **Overture** (Source: hero) · 02 **Signal Chain** (Extract: the raw-text → JSON demo, framed as a guitar signal chain where pedals are tokenize → constrain → validate → repair) · 03 **Discography** (Structure: projects as records) · 04 **The Rig** (Stack: tools as gear) · 05 **Tour History** (Trace: experience) · 06 **Soundcheck** (Query: FAQ) · 07 **Liner Notes** (Publish: writing) · 08 **Iron & Strings** (Signal: powerlifting + guitar, Demon-6) · 09 **Encore** (Ship: contact). Eyebrows read `TRACK 03 / DISCOGRAPHY`.
+> - **Type:** add **UnifrakturCook 700** (true fraktur blackletter, `next/font/google`) for accent words, the footer wordmark and the HD logo. Instrument Serif is retired. Keep Bricolage chrome for headlines so copy stays readable for founders.
+> - **Colour:** add `--blood: #d9142b` for stage fire and peak heat (forge → blood gradient). `--forge` stays the primary accent.
+> - **Preloader:** an amp volume dial counts **00 → 11** ("plugging in… tuning down… warming the tubes… gain to eleven…"), then a power-chord hit (shake, white strobe, sparks) and the blade shear.
+> - **Hero:** the liquid-chrome shader gains a flickering stage-fire glow from below. Filings cycle **blackletter HD → 🤘 → `{ }` → six-string guitar silhouette → barbell plate**. The accent word ("reliable") is molten blackletter. The cursor dot is a guitar pick. The badge reads "FORGED NOT DEMOED ·".
+> - **Strings:** a six-string fretboard divider (`<Strings>`) under the hero, and reusable between tracks: the pointer plucks strings as it crosses them (damped standing waves, wound low strings).
+> - **Sound (§9.5):** the header toggle is an **AMP** switch with an LED, off by default. Foley becomes guitar: synthesized Karplus-Strong plucks through a waveshaper (no samples), power-chord stabs on CTA clicks, a pick slide on route changes.
+> - **Easter egg (§9.6):** typing `deadlift` still triggers the plate rain; typing `\m/` sends the filings into devil horns and plays a chord.
+
 ## 1. Tech stack (pin these versions)
 
 | Layer | Choice |

@@ -2,8 +2,11 @@
 
 import { useRef } from "react";
 import { gsap, prefersReduced, useGSAP } from "@/lib/gsap";
+import { amp } from "@/lib/amp";
 
-const STEPS = ["heating crucible", "pouring", "quenching", "tempering"];
+const STEPS = ["plugging in", "tuning down", "warming the tubes", "gain to eleven"];
+/** The dial sweeps 270°, from 7 o'clock (0) to 5 o'clock (11). */
+const SWEEP = 270;
 
 export function signalPreloaderDone() {
   (window as unknown as { __plDone?: boolean }).__plDone = true;
@@ -59,13 +62,51 @@ function sparks(canvas: HTMLCanvasElement, ox: number, oy: number) {
   requestAnimationFrame(frame);
 }
 
+/** A chicken-head amp knob with a 0–11 scale. */
+function Knob() {
+  return (
+    <svg viewBox="0 0 120 120" className="h-[22vw] w-[22vw] max-h-[260px] max-w-[260px] sm:h-[16vw] sm:w-[16vw]" aria-hidden>
+      {Array.from({ length: 12 }, (_, i) => {
+        const a = ((-SWEEP / 2 + (SWEEP / 11) * i - 90) * Math.PI) / 180;
+        return (
+          <g key={i}>
+            <line x1={60 + Math.cos(a) * 46} y1={60 + Math.sin(a) * 46} x2={60 + Math.cos(a) * 52} y2={60 + Math.sin(a) * 52} stroke={i === 11 ? "#ff6a1a" : "#6a717c"} strokeWidth={i === 11 ? 2.4 : 1.4} />
+            <text x={60 + Math.cos(a) * 58} y={60 + Math.sin(a) * 58 + 2.5} textAnchor="middle" className="font-mono" fontSize="7" fill={i === 11 ? "#ff6a1a" : "#6a717c"}>
+              {i}
+            </text>
+          </g>
+        );
+      })}
+      <circle cx="60" cy="60" r="38" fill="url(#knob-body)" stroke="#2a2e35" />
+      <circle cx="60" cy="60" r="30" fill="url(#knob-cap)" />
+      <g data-knob transform={`rotate(${-SWEEP / 2} 60 60)`}>
+        <path d="M60 18 L66 58 A6 6 0 0 1 54 58 Z" fill="#e9edf2" />
+        <line x1="60" y1="22" x2="60" y2="40" stroke="#ff6a1a" strokeWidth="2" strokeLinecap="round" />
+      </g>
+      <defs>
+        <radialGradient id="knob-body" cx="40%" cy="35%">
+          <stop offset="0" stopColor="#2a2e35" />
+          <stop offset="1" stopColor="#0c0d10" />
+        </radialGradient>
+        <radialGradient id="knob-cap" cx="38%" cy="30%">
+          <stop offset="0" stopColor="#9aa1ab" />
+          <stop offset=".5" stopColor="#3a3f47" />
+          <stop offset="1" stopColor="#14161a" />
+        </radialGradient>
+      </defs>
+    </svg>
+  );
+}
+
 function Face() {
   return (
     <div className="mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12">
-      <div className="flex items-end justify-between gap-6">
-        <div data-count className="display tabular chrome-text text-[38vw] leading-[0.8] sm:text-[28vw]">
-          000
+      <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-mute">Volume</div>
+      <div className="mt-2 flex items-end justify-between gap-6">
+        <div data-count className="display tabular chrome-text text-[40vw] leading-[0.8] sm:text-[30vw]">
+          00
         </div>
+        <Knob />
       </div>
       <div className="mt-6 flex items-end justify-between gap-6 font-mono text-[11px] uppercase tracking-[0.18em] text-mute">
         <div className="h-[1.3em] overflow-hidden">
@@ -77,18 +118,18 @@ function Face() {
             ))}
           </div>
         </div>
-        <span>Hitarth Desai · forged not demoed</span>
+        <span>Hitarth Desai · AI Systems Engineer</span>
       </div>
       <div className="mt-4 h-[2px] w-full bg-steel-3">
-        <div data-bar className="h-full origin-left bg-gradient-to-r from-forge to-ember shadow-[0_0_12px_var(--forge)]" style={{ transform: "scaleX(0)" }} />
+        <div data-bar className="h-full origin-left bg-gradient-to-r from-forge via-ember to-blood shadow-[0_0_12px_var(--forge)]" style={{ transform: "scaleX(0)" }} />
       </div>
     </div>
   );
 }
 
 /**
- * First visit per session: a mechanical counter races 000 → 100 through the forging steps,
- * a hammer strike shakes the plate and throws sparks, then a guillotine shear splits it.
+ * First visit per session: the amp's volume dial climbs 00 → 11, a power-chord hit shakes
+ * the plate, strobes and throws sparks, then a guillotine shear splits it.
  * An inline <head> script sets html[data-pl] on repeat visits, which hides this via CSS.
  */
 export function Preloader() {
@@ -112,7 +153,8 @@ export function Preloader() {
       const done = () => void gsap.set(el, { display: "none" });
 
       const tl = gsap.timeline({ onComplete: done });
-      tl.to(o, { n: 100, duration: dur, ease: "power2.inOut", onUpdate: () => counters.forEach((c) => (c.textContent = String(Math.round(o.n)).padStart(3, "0"))) })
+      tl.to(o, { n: 11, duration: dur, ease: "power2.inOut", onUpdate: () => counters.forEach((c) => (c.textContent = String(Math.round(o.n)).padStart(2, "0"))) })
+        .fromTo(el.querySelectorAll("[data-knob]"), { rotation: -SWEEP / 2, svgOrigin: "60 60" }, { rotation: SWEEP / 2, svgOrigin: "60 60", duration: dur, ease: "power2.inOut" }, 0)
         .to(el.querySelectorAll("[data-bar]"), { scaleX: 1, duration: dur, ease: "power2.inOut" }, 0)
         .to(el.querySelectorAll("[data-line]"), { yPercent: -100 * (STEPS.length - 1) / STEPS.length, duration: dur * 0.9, ease: `steps(${STEPS.length - 1})` }, 0);
 
@@ -121,12 +163,14 @@ export function Preloader() {
         return;
       }
 
-      // Hammer strike: a 120ms jitter, sparks off the counter, then the shear.
+      // Power-chord hit: a 120ms jitter, a strobe, sparks off the counter, then the shear.
       tl.add(() => {
         const r = counters[0].getBoundingClientRect();
         sparks(spark, r.left + r.width * 0.92, r.top + r.height * 0.55);
+        amp.power(82.41, 1);
       }, "+=0.08")
-        .to(halves, { keyframes: { x: [0, -9, 7, -5, 4, 0], y: [0, 5, -6, 4, -2, 0] }, duration: 0.12, ease: "none" }, "<")
+        .to(halves, { keyframes: { x: [0, -12, 9, -7, 5, 0], y: [0, 7, -8, 5, -3, 0] }, duration: 0.12, ease: "none" }, "<")
+        .fromTo(el.querySelector("[data-strobe]"), { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, "<")
         .fromTo(el.querySelector("[data-blade]"), { scaleX: 0, opacity: 1 }, { scaleX: 1, duration: 0.22, ease: "power4.out" }, "+=0.08")
         .to(halves[0], { yPercent: -100, xPercent: -3, duration: 1, ease: "hop" }, "+=0.04")
         .to(halves[1], { yPercent: 100, xPercent: 3, duration: 1, ease: "hop" }, "<")
@@ -145,6 +189,7 @@ export function Preloader() {
         <Face />
       </div>
       <div data-blade className="absolute inset-x-0 top-1/2 h-[2px] origin-left -translate-y-1/2 bg-ember shadow-[0_0_18px_4px_rgba(255,106,26,.7)]" style={{ transform: "scaleX(0)" }} />
+      <div data-strobe className="pointer-events-none absolute inset-0 bg-[#fff6ea] opacity-0" />
       <canvas className="pointer-events-none absolute inset-0 h-full w-full" />
     </div>
   );
