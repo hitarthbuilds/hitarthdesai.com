@@ -8,7 +8,8 @@ import { gsap, ScrollTrigger, prefersReduced, useGSAP } from "@/lib/gsap";
 let ready = false;
 
 /**
- * Route transition: a steel shutter drops and lifts on every client-side navigation.
+ * Route transition: an amp's grille cloth drops and lifts on every client-side navigation,
+ * logo plate first.
  * Only opacity touches the page wrapper; transforms would break fixed/pinned children.
  */
 export default function Template({ children }: { children: React.ReactNode }) {
@@ -32,9 +33,9 @@ export default function Template({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <div ref={shutter} aria-hidden className="brushed pointer-events-none fixed inset-0 z-[85] place-items-center !rounded-none" style={{ display: "none" }}>
+      <div ref={shutter} aria-hidden className="grille pointer-events-none fixed inset-0 z-[85] place-items-center" style={{ display: "none" }}>
         <div className="flex flex-col items-center gap-5">
-          <span data-mark className="display chrome-text text-[14vw] leading-none sm:text-[9vw]">
+          <span data-mark className="blackletter chrome-text text-[18vw] leading-none sm:text-[11vw]">
             HD
           </span>
           <span data-rule className="block h-[2px] w-40 origin-left bg-forge shadow-[0_0_14px_var(--forge)]" />

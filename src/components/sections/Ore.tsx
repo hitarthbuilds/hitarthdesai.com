@@ -7,14 +7,15 @@ import { gsap, SplitText, prefersReduced, useGSAP } from "@/lib/gsap";
 import { PROFILE, TRACKS } from "@/content/profile";
 import { Magnetic } from "../fx/Magnetic";
 import { onPreloaderDone } from "../layout/Preloader";
-import { Anvil, ArrowRight, SocialIcon } from "../ui/Icons";
+import { ArrowRight, SocialIcon } from "../ui/Icons";
+import { amp } from "@/lib/amp";
 
 const ShaderCanvas = dynamic(() => import("../fx/ShaderCanvas").then((m) => m.ShaderCanvas), { ssr: false });
-const FilingsField = dynamic(() => import("../fx/FilingsField").then((m) => m.FilingsField), { ssr: false });
+const PickSwarm = dynamic(() => import("../fx/PickSwarm").then((m) => m.PickSwarm), { ssr: false });
 
 const HEADLINE_TEXT = PROFILE.headline.map((l) => l.map((s) => s.text).join("")).join(" ");
 
-/** Track 01 / Overture: liquid-chrome stage, iron-filings field and the headline. */
+/** Track 01 / Overture: the chrome stage, the pick swarm and the headline. */
 export function Ore() {
   const root = useRef<HTMLElement>(null);
 
@@ -45,15 +46,19 @@ export function Ore() {
         if (reduced) return;
         // One specular sweep across the chrome, char by char.
         tl.fromTo(chrome, { "--sheen": "130%" }, { "--sheen": "-30%", duration: 1.1, stagger: 0.016, ease: "power2.inOut" }, 0.5);
-        // The accent word lands white-hot and cools through ember to forge.
+        // The accent word hits like a stage light: a hard white flash, two flickers, then it
+        // settles into forge orange over a blood-red bloom.
         if (accent)
           tl.fromTo(
             accent,
-            { color: "#fff6e8", textShadow: "0 0 22px rgba(255,236,205,0.95), 0 0 70px rgba(255,106,26,0.9)" },
+            { color: "#fff6e8", opacity: 1, textShadow: "0 0 22px rgba(255,236,205,0.95), 0 0 70px rgba(255,106,26,0.9)" },
             {
               keyframes: [
-                { color: "#ffb547", textShadow: "0 0 18px rgba(255,181,71,0.75), 0 0 50px rgba(217,20,43,0.6)", duration: 0.45, ease: "power1.out" },
-                { color: "#ff6a1a", textShadow: "0 0 18px rgba(255,106,26,0.35), 0 0 46px rgba(217,20,43,0.18)", duration: 0.85, ease: "power2.out" },
+                { opacity: 0.35, duration: 0.05, ease: "none" },
+                { opacity: 1, duration: 0.05, ease: "none" },
+                { opacity: 0.5, duration: 0.06, ease: "none", delay: 0.08 },
+                { opacity: 1, duration: 0.04, ease: "none" },
+                { color: "#ff6a1a", textShadow: "0 0 18px rgba(255,106,26,0.35), 0 0 46px rgba(217,20,43,0.18)", duration: 0.9, ease: "power2.out" },
               ],
             },
             0.75,
@@ -67,7 +72,9 @@ export function Ore() {
         gsap.to("[data-hero-copy]", { yPercent: -18, opacity: 0.1, ease: "none", scrollTrigger: st });
         gsap.to("[data-field-drift]", { yPercent: 22, scale: 1.15, ease: "none", scrollTrigger: st });
         gsap.to("[data-shader]", { yPercent: 12, ease: "none", scrollTrigger: st });
-        gsap.to("[data-ring]", { rotate: 360, duration: 22, repeat: -1, ease: "none" });
+        gsap.to("[data-ring]", { rotation: -360, svgOrigin: "50 50", duration: 30, repeat: -1, ease: "none" });
+        // 33⅓ rpm.
+        gsap.to("[data-vinyl]", { rotation: 360, svgOrigin: "50 50", duration: 1.8, repeat: -1, ease: "none" });
       });
 
       return () => {
@@ -83,12 +90,12 @@ export function Ore() {
       <div data-shader className="absolute inset-0 -z-30">
         <ShaderCanvas />
       </div>
-      {/* Legibility scrims: the copy sits on the darker left, the filings on the right. */}
+      {/* Legibility scrims: the copy sits on the darker left, the swarm on the right. */}
       <div className="pointer-events-none absolute inset-0 -z-20 bg-[linear-gradient(90deg,rgba(8,9,11,.86)_0%,rgba(8,9,11,.55)_42%,rgba(8,9,11,.05)_78%)]" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 -z-20 h-48 bg-gradient-to-t from-void via-void/70 to-transparent" />
       <div data-field className="absolute inset-y-0 right-0 -z-10 w-full lg:w-[56%]">
         <div data-field-drift className="h-full w-full opacity-30 sm:opacity-45 lg:opacity-100">
-          <FilingsField />
+          <PickSwarm />
         </div>
       </div>
 
@@ -140,7 +147,7 @@ export function Ore() {
           <div data-hero-in className="flex flex-col items-start gap-6 lg:items-end">
             <div className="flex flex-wrap gap-3">
               <Magnetic>
-                <Link href="/#discography" className="btn btn-forge !h-14 !px-7 !text-[16px]" data-cursor="discography">
+                <Link href="/#discography" className="btn btn-forge !h-14 !px-7 !text-[16px]" data-cursor="discography" onClick={() => amp.power(82.41, 0.8)}>
                   See the work
                   <ArrowRight />
                 </Link>
@@ -167,18 +174,33 @@ export function Ore() {
         </div>
       </div>
 
-      <div data-hero-in className="pointer-events-none absolute right-8 top-24 hidden h-32 w-32 lg:block xl:right-12">
-        <svg data-ring viewBox="0 0 100 100" className="h-full w-full" aria-hidden>
+      <div data-hero-in className="pointer-events-none absolute right-8 top-24 hidden h-36 w-36 lg:block xl:right-12">
+        <svg viewBox="0 0 100 100" className="h-full w-full" aria-hidden>
           <defs>
-            <path id="overture-ring" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
+            <path id="overture-ring" d="M50,50 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" />
+            <radialGradient id="overture-vinyl" cx="50%" cy="50%" r="50%">
+              <stop offset="0" stopColor="#1a1c20" />
+              <stop offset="1" stopColor="#060708" />
+            </radialGradient>
           </defs>
-          <text className="fill-mute font-mono text-[8.2px] uppercase tracking-[0.28em]">
-            <textPath href="#overture-ring">Forged not demoed · Forged not demoed · </textPath>
+          <g data-ring>
+            <text className="fill-mute font-mono text-[6.6px] uppercase tracking-[0.24em]">
+              <textPath href="#overture-ring">{`${PROFILE.motto} · ${PROFILE.motto} · `}</textPath>
+            </text>
+          </g>
+          <g data-vinyl>
+          <circle cx="50" cy="50" r="34" fill="url(#overture-vinyl)" stroke="rgba(220,228,240,.16)" strokeWidth=".5" />
+          {[31, 28, 25, 22, 19].map((r) => (
+            <circle key={r} cx="50" cy="50" r={r} fill="none" stroke="rgba(220,228,240,.07)" strokeWidth=".5" />
+          ))}
+          <path d="M30 34 A26 26 0 0 1 50 24" fill="none" stroke="rgba(255,255,255,.22)" strokeWidth="1.2" strokeLinecap="round" />
+          <circle cx="50" cy="50" r="12" fill="#ff6a1a" />
+          <text x="50" y="53.6" textAnchor="middle" className="fill-void" style={{ fontFamily: "var(--font-black)", fontSize: 10 }}>
+            HD
           </text>
+          <circle cx="50" cy="50" r="1.2" fill="#08090b" />
+          </g>
         </svg>
-        <span className="absolute inset-0 grid place-items-center text-forge">
-          <Anvil className="h-6 w-8 drop-shadow-[0_0_8px_rgba(255,106,26,.55)]" />
-        </span>
       </div>
       <div data-hero-in className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-dim [@media(min-height:1000px)]:flex">
         Scroll

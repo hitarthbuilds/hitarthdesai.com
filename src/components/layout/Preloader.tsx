@@ -129,7 +129,8 @@ function Face() {
 
 /**
  * First visit per session: the amp's volume dial climbs 00 → 11, a power-chord hit shakes
- * the plate, strobes and throws sparks, then a guillotine shear splits it.
+ * the stage and strobes, the low E string across the seam rings out and snaps, and the
+ * screen splits along it.
  * An inline <head> script sets html[data-pl] on repeat visits, which hides this via CSS.
  */
 export function Preloader() {
@@ -163,18 +164,28 @@ export function Preloader() {
         return;
       }
 
-      // Power-chord hit: a 120ms jitter, a strobe, sparks off the counter, then the shear.
+      // The low E across the seam rings out, then snaps at the 12th fret.
+      const [left, right] = el.querySelectorAll<SVGPathElement>("[data-string] path");
+      const wave = { a: 0 };
+      const bend = () => {
+        left.setAttribute("d", `M0 50 Q250 ${50 + wave.a} 500 ${50 + wave.a}`);
+        right.setAttribute("d", `M500 ${50 + wave.a} Q750 ${50 + wave.a} 1000 50`);
+      };
+
+      // Power-chord hit: a 120ms jitter, a strobe, sparks, the string rings and snaps, the
+      // plate splits.
       tl.add(() => {
-        const r = counters[0].getBoundingClientRect();
-        sparks(spark, r.left + r.width * 0.92, r.top + r.height * 0.55);
+        sparks(spark, innerWidth / 2, innerHeight / 2);
         amp.power(82.41, 1);
       }, "+=0.08")
         .to(halves, { keyframes: { x: [0, -12, 9, -7, 5, 0], y: [0, 7, -8, 5, -3, 0] }, duration: 0.12, ease: "none" }, "<")
         .fromTo(el.querySelector("[data-strobe]"), { opacity: 0.85 }, { opacity: 0, duration: 0.35, ease: "power2.out" }, "<")
-        .fromTo(el.querySelector("[data-blade]"), { scaleX: 0, opacity: 1 }, { scaleX: 1, duration: 0.22, ease: "power4.out" }, "+=0.08")
-        .to(halves[0], { yPercent: -100, xPercent: -3, duration: 1, ease: "hop" }, "+=0.04")
+        .to(wave, { keyframes: { a: [0, 22, -19, 15, -12, 9, -6, 4, 0] }, duration: 0.42, ease: "none", onUpdate: bend }, "<")
+        .add(() => sparks(spark, innerWidth / 2, innerHeight / 2))
+        .to(left.parentElement, { rotation: -9, svgOrigin: "0 50", opacity: 0, duration: 0.7, ease: "power3.out" })
+        .to(right.parentElement, { rotation: 9, svgOrigin: "1000 50", opacity: 0, duration: 0.7, ease: "power3.out" }, "<")
+        .to(halves[0], { yPercent: -100, xPercent: -3, duration: 1, ease: "hop" }, "<0.05")
         .to(halves[1], { yPercent: 100, xPercent: 3, duration: 1, ease: "hop" }, "<")
-        .to(el.querySelector("[data-blade]"), { opacity: 0, duration: 0.3 }, "<0.1")
         .add(signalPreloaderDone, "<0.25");
     },
     { scope: root },
@@ -182,13 +193,19 @@ export function Preloader() {
 
   return (
     <div ref={root} className="preloader fixed inset-0 z-[100]" aria-hidden>
-      <div data-half className="brushed absolute inset-0 grid place-items-center !rounded-none !border-0" style={{ clipPath: "inset(0 0 50% 0)" }}>
+      <div data-half className="tolex absolute inset-0 grid place-items-center" style={{ clipPath: "inset(0 0 50% 0)" }}>
         <Face />
       </div>
-      <div data-half className="brushed absolute inset-0 grid place-items-center !rounded-none !border-0" style={{ clipPath: "inset(50% 0 0 0)" }}>
+      <div data-half className="tolex absolute inset-0 grid place-items-center" style={{ clipPath: "inset(50% 0 0 0)" }}>
         <Face />
       </div>
-      <div data-blade className="absolute inset-x-0 top-1/2 h-[2px] origin-left -translate-y-1/2 bg-ember shadow-[0_0_18px_4px_rgba(255,106,26,.7)]" style={{ transform: "scaleX(0)" }} />
+      <svg data-string viewBox="0 0 1000 100" preserveAspectRatio="none" className="absolute inset-x-0 top-1/2 h-24 w-full -translate-y-1/2 overflow-visible drop-shadow-[0_0_6px_rgba(255,106,26,.55)]">
+        {["M0 50 Q250 50 500 50", "M500 50 Q750 50 1000 50"].map((d) => (
+          <g key={d}>
+            <path d={d} fill="none" stroke="#b9c0ca" strokeWidth="3" vectorEffect="non-scaling-stroke" />
+          </g>
+        ))}
+      </svg>
       <div data-strobe className="pointer-events-none absolute inset-0 bg-[#fff6ea] opacity-0" />
       <canvas className="pointer-events-none absolute inset-0 h-full w-full" />
     </div>

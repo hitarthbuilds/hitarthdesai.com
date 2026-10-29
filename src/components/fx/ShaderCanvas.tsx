@@ -15,6 +15,8 @@ const VERT = `attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
  *  3. shaded with a procedural studio (softbox bands, dark floor, cool blue rim) + Schlick fresnel
  *  4. pointer heat dents the surface and glows forge → ember, cooling back to chrome
  *  5. stage fire flickers up from the bottom edge and reflects in downward-facing slopes
+ *  6. two concert spotlights rake down through haze; every riff (amp:hit) sends a ripple ring
+ *     through the surface like a kick drum through a speaker cone
  * Every smoothstep keeps edge0 < edge1 (reversed edges are undefined behaviour), and the
  * final colour is clamped.
  */
@@ -29,6 +31,9 @@ uniform vec2 u_res;
 uniform float u_time;
 uniform float u_fade;
 uniform vec3 u_heat[HEAT];
+uniform float u_pulse;
+uniform float u_pulseR;
+uniform vec2 u_pulseAt;
 
 float hash(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
 float noise(vec2 p){
@@ -50,7 +55,8 @@ float heatAt(vec2 p){
   }
   return h;
 }
-float field(vec2 p,vec2 r){return fbm(p*.85+1.45*r)-.1*heatAt(p);}
+float ripple(vec2 p){float d=length(p-u_pulseAt)-u_pulseR;return u_pulse*exp(-d*d*80.);}
+float field(vec2 p,vec2 r){return fbm(p*.85+1.45*r)-.1*heatAt(p)+.09*ripple(p);}
 
 vec3 env(vec3 R){
   float y=R.y,x=R.x;
@@ -96,6 +102,20 @@ void main(){
   float hk=smoothstep(0.,.55,k);
   col=mix(col,col*hc*2.2+hc*.22*k,hk);
 
+  col*=1.+.35*ripple(p);
+
+  // Concert spotlights raking down from above the frame, through haze.
+  float haze=.55+.45*fbm(p*2.6+vec2(t*.15,-t*.05));
+  for(int i=0;i<2;i++){
+    float fi=float(i);
+    vec2 o=vec2(mix(-.6,.8,fi),.78);
+    vec2 dv=p-o;
+    float a=-1.5708+(fi*2.-1.)*.3+.2*sin(t*.33+fi*2.4);
+    float w=1.-smoothstep(.025,.1,abs(atan(dv.y,dv.x)-a));
+    float fall=1.-smoothstep(.15,1.5,length(dv));
+    col+=mix(vec3(.55,.68,1.),vec3(1.,.78,.58),fi)*w*fall*haze*.11;
+  }
+
   col*=1.-.6*smoothstep(.3,1.25,length(p*vec2(.78,1.)));
 
   // Stage fire licking up from below the frame.
@@ -130,6 +150,9 @@ export function ShaderCanvas({ className = "" }: { className?: string }) {
     let uTime: WebGLUniformLocation | null = null;
     let uFade: WebGLUniformLocation | null = null;
     let uHeat: WebGLUniformLocation | null = null;
+    let uPulse: WebGLUniformLocation | null = null;
+    let uPulseR: WebGLUniformLocation | null = null;
+    let uPulseAt: WebGLUniformLocation | null = null;
 
     // Builds the program on the (possibly reused) context. Never force-lose the context in
     // cleanup: a StrictMode remount gets the same context back, and a dead one paints white.
@@ -163,6 +186,9 @@ export function ShaderCanvas({ className = "" }: { className?: string }) {
       uTime = gl.getUniformLocation(prog, "u_time");
       uFade = gl.getUniformLocation(prog, "u_fade");
       uHeat = gl.getUniformLocation(prog, "u_heat[0]");
+      uPulse = gl.getUniformLocation(prog, "u_pulse");
+      uPulseR = gl.getUniformLocation(prog, "u_pulseR");
+      uPulseAt = gl.getUniformLocation(prog, "u_pulseAt");
       return true;
     };
 
@@ -211,6 +237,14 @@ export function ShaderCanvas({ className = "" }: { className?: string }) {
     };
     const onLeave = () => (pointer.inside = false);
 
+    // Riff ripple: rings out from the pick swarm's centre (right of the copy).
+    const pulse = { k: 0, r: 0 };
+    const onHit = (e: Event) => {
+      pulse.k = Math.min(1.3, pulse.k * 0.5 + ((e as CustomEvent<number>).detail ?? 1));
+      pulse.r = 0;
+      if (!running) sync();
+    };
+
     let time = 12;
     let fade = still ? 1 : 0;
     let last = 0;
@@ -220,6 +254,9 @@ export function ShaderCanvas({ className = "" }: { className?: string }) {
       gl.uniform1f(uTime, time);
       gl.uniform1f(uFade, fade);
       gl.uniform3fv(uHeat, heat);
+      gl.uniform1f(uPulse, pulse.k);
+      gl.uniform1f(uPulseR, pulse.r);
+      gl.uniform2f(uPulseAt, 0.25 * (W / H), 0.03);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
     const step = (now: number) => {
@@ -228,6 +265,8 @@ export function ShaderCanvas({ className = "" }: { className?: string }) {
       time += dt;
       fade += (1 - fade) * Math.min(1, dt * 1.6);
       const active = pointer.inside && now - lastMove < 1600;
+      pulse.r += dt * 1.15;
+      pulse.k = pulse.k < 0.01 ? 0 : pulse.k * Math.exp(-dt / 0.45);
       for (let i = 0; i < HEAT; i++) {
         const z = i * 3 + 2;
         if (i === cur && active) heat[z] += (0.95 - heat[z]) * Math.min(1, dt * 5);
@@ -301,6 +340,7 @@ export function ShaderCanvas({ className = "" }: { className?: string }) {
     if (!still) {
       window.addEventListener("pointermove", onMove, { passive: true });
       document.documentElement.addEventListener("pointerleave", onLeave);
+      window.addEventListener("amp:hit", onHit);
     }
     sync();
 
@@ -314,6 +354,7 @@ export function ShaderCanvas({ className = "" }: { className?: string }) {
       document.removeEventListener("visibilitychange", sync);
       window.removeEventListener("pointermove", onMove);
       document.documentElement.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("amp:hit", onHit);
       // Free GPU objects but keep the context alive for a StrictMode/fast-refresh remount.
       const g = gl as GL | null;
       if (g && !g.isContextLost()) {

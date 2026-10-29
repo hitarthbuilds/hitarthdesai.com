@@ -45,18 +45,6 @@ export function SocialIcon({ id, className = "h-[18px] w-[18px]" }: P & { id: So
   );
 }
 
-/** Anvil silhouette: horn on the left, heel on the right, waisted stand. */
-export function Anvil({ className = "" }: P) {
-  return (
-    <svg viewBox="0 0 32 24" className={className} aria-hidden>
-      <path
-        fill="currentColor"
-        d="M1 6.5c3.6 0 7.4-.2 10-.9V4.5h20v4.2h-3.2c-1.7 0-3 1.2-3 2.8 0 1.2.8 2.2 2 2.6l1.2.4V18h2v2.5H9V18h2v-3.4l1.2-.4c1.2-.4 2-1.4 2-2.6v-.2c-4.5-.6-9.8-2.4-13.2-4.9Z"
-      />
-    </svg>
-  );
-}
-
 export function ArrowRight({ className = "h-4 w-4" }: P) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

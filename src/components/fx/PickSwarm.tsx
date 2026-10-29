@@ -3,24 +3,25 @@
 import { useEffect, useRef } from "react";
 import { prefersReduced } from "@/lib/gsap";
 
-/** Shapes the filings assemble into, in order. */
-const GLYPHS = ["monogram", "horns", "braces", "guitar", "plate"] as const;
+/** Shapes the swarm assembles into, in order. */
+const GLYPHS = ["monogram", "horns", "braces", "guitar", "vinyl"] as const;
 type Glyph = (typeof GLYPHS)[number];
 
-/** Steel shades (cold) and two heat colours; each gets a row of pre-rotated sprites. */
-const COLORS = ["#4a5059", "#7d848f", "#b9c0ca", "#e9edf2", "#ff6a1a", "#ffb547"];
+/** Chrome and black picks, plus two spotlit colours; each gets a row of pre-rotated sprites. */
+const COLORS = ["#3a3f47", "#7d848f", "#b9c0ca", "#e9edf2", "#ff6a1a", "#ffb547"];
 const HOT = 4;
-const ANGLES = 32;
-const SPRITE = 16;
+const ANGLES = 36;
+const SPRITE = 14;
 
-type Filing = { x: number; y: number; vx: number; vy: number; tx: number; ty: number; a: number; heat: number; shade: number; alpha: number };
+type Pick = { x: number; y: number; vx: number; vy: number; tx: number; ty: number; a: number; heat: number; shade: number; alpha: number };
 
 /**
- * About 1,200 iron filings on paper. Each one aligns with a magnetic dipole field (a magnet
- * under the glyph plus a stronger one at the cursor), springs toward a target sampled from an
- * offscreen glyph's alpha, and the set re-forms into the next glyph every `interval` ms.
+ * A swarm of about 1,200 guitar picks. Each pick points along a dipole field (one source under
+ * the glyph, a stronger one at the cursor, like a pickup's magnet), springs toward a target
+ * sampled from an offscreen glyph's alpha, and the swarm re-forms into the next glyph every
+ * `interval` ms. Riffs (the `amp:hit` event) knock it outward.
  */
-export function FilingsField({ className = "", interval = 3600 }: { className?: string; interval?: number }) {
+export function PickSwarm({ className = "", interval = 3600 }: { className?: string; interval?: number }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -32,36 +33,33 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
     const display = css.getPropertyValue("--ff-display").trim() || "system-ui, sans-serif";
     const blackletter = css.getPropertyValue("--ff-black").trim() || "serif";
 
-    // Sprite atlas: one row per colour, one column per angle across [0, π).
+    // Sprite atlas: one row per colour, one column per angle across [0, 2π). Tip points along +x.
     const cell = Math.ceil(SPRITE * dpr);
     const atlas = document.createElement("canvas");
     atlas.width = cell * ANGLES;
     atlas.height = cell * COLORS.length;
     const ag = atlas.getContext("2d")!;
-    ag.lineCap = "round";
+    const pick = new Path2D("M-5.5 0C-5.5-3.6-4.3-5-2-5 1.2-5 4.6-1.8 6 0 4.6 1.8 1.2 5-2 5-4.3 5-5.5 3.6-5.5 0Z");
     COLORS.forEach((col, row) => {
       for (let i = 0; i < ANGLES; i++) {
-        const th = (i / ANGLES) * Math.PI;
-        const cx = i * cell + cell / 2, cy = row * cell + cell / 2;
-        const dx = Math.cos(th) * cell * 0.34, dy = Math.sin(th) * cell * 0.34;
-        ag.strokeStyle = col;
-        ag.lineWidth = 1.7 * dpr;
+        ag.save();
+        ag.translate(i * cell + cell / 2, row * cell + cell / 2);
+        ag.rotate((i / ANGLES) * Math.PI * 2);
+        ag.scale((cell / 14) * 0.95, (cell / 14) * 0.95);
+        ag.fillStyle = col;
+        ag.fill(pick);
+        ag.strokeStyle = "rgba(255,255,255,0.28)";
+        ag.lineWidth = 0.8;
         ag.beginPath();
-        ag.moveTo(cx - dx, cy - dy);
-        ag.lineTo(cx + dx, cy + dy);
+        ag.moveTo(-3.6, -2.4);
+        ag.quadraticCurveTo(-1, -3.8, 1.6, -3);
         ag.stroke();
-        // Specular glint along the top edge of each filing.
-        ag.strokeStyle = "rgba(255,255,255,0.35)";
-        ag.lineWidth = 0.6 * dpr;
-        ag.beginPath();
-        ag.moveTo(cx - dx * 0.6, cy - dy * 0.6 - 0.4 * dpr);
-        ag.lineTo(cx + dx * 0.2, cy + dy * 0.2 - 0.4 * dpr);
-        ag.stroke();
+        ag.restore();
       }
     });
 
     let W = 0, H = 0, N = 0;
-    let parts: Filing[] = [];
+    let parts: Pick[] = [];
     let glyphIdx = 0;
 
     // Glyphs sit in a box biased right and slightly high, clear of the headline's left edge.
@@ -120,7 +118,7 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
         g.globalCompositeOperation = "source-over";
         g.restore();
       } else {
-        // Competition plate, face-on: rim, groove, raised hub, sleeve hole.
+        // A record, face-on: disc, a few groove gaps, the label ring and the spindle hole.
         const R = m * 0.5;
         g.beginPath();
         g.arc(cx, cy, R, 0, Math.PI * 2);
@@ -132,10 +130,11 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
           g.arc(cx, cy, r0, 0, Math.PI * 2, true);
           g.fill();
         };
-        ring(R * 0.8, R * 0.86);
-        ring(R * 0.34, R * 0.4);
+        ring(R * 0.84, R * 0.87);
+        ring(R * 0.66, R * 0.69);
+        ring(R * 0.4, R * 0.44);
         g.beginPath();
-        g.arc(cx, cy, R * 0.15, 0, Math.PI * 2);
+        g.arc(cx, cy, R * 0.07, 0, Math.PI * 2);
         g.fill();
         g.globalCompositeOperation = "source-over";
       }
@@ -188,7 +187,7 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
 
     const mouse = { x: -9999, y: -9999, on: false };
     const B = { x: 0, y: 0 };
-    const fieldAngle = (p: Filing) => {
+    const fieldAngle = (p: Pick) => {
       B.x = B.y = 0;
       const u = Math.min(W, H) * 0.5;
       dipole((p.x - W * 0.56) / u, (p.y - H * 0.47) / u, 1, B);
@@ -208,7 +207,7 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
         N = target;
         parts = Array.from({ length: N }, () => {
           const shade = Math.random() < 0.18 ? 3 : Math.random() < 0.45 ? 2 : Math.random() < 0.6 ? 1 : 0;
-          return { x: Math.random() * W, y: Math.random() * H, vx: 0, vy: 0, tx: W / 2, ty: H / 2, a: Math.random() * Math.PI, heat: 0, shade, alpha: 0.45 + Math.random() * 0.55 };
+          return { x: Math.random() * W, y: Math.random() * H, vx: 0, vy: 0, tx: W / 2, ty: H / 2, a: Math.random() * Math.PI * 2, heat: 0, shade, alpha: 0.5 + Math.random() * 0.5 };
         });
       }
       assign(false);
@@ -226,9 +225,9 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
       ctx.clearRect(0, 0, W, H);
       const half = SPRITE / 2;
       for (const p of parts) {
-        let a = p.a % Math.PI;
-        if (a < 0) a += Math.PI;
-        const col = Math.round((a / Math.PI) * ANGLES) % ANGLES;
+        let a = p.a % (Math.PI * 2);
+        if (a < 0) a += Math.PI * 2;
+        const col = Math.round((a / (Math.PI * 2)) * ANGLES) % ANGLES;
         const row = p.heat > 0.55 ? HOT + 1 : p.heat > 0.2 ? HOT : p.shade;
         ctx.globalAlpha = Math.min(1, p.alpha + p.heat * 0.5);
         ctx.drawImage(atlas, col * cell, row * cell, cell, cell, p.x - half, p.y - half, SPRITE, SPRITE);
@@ -245,7 +244,7 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
           if (d2 < R * R) {
             const d = Math.sqrt(d2) || 1;
             const f = (1 - d / R) ** 2 * 2.2;
-            // Swirl around the magnet, with a slight pull: they are iron, after all.
+            // Swirl around the cursor, with a slight pull toward it.
             p.vx += (-dy / d) * f * 0.9 - (dx / d) * f * 0.35;
             p.vy += (dx / d) * f * 0.9 - (dy / d) * f * 0.35;
             p.heat = Math.min(1, p.heat + (1 - d / R) * 0.07);
@@ -256,12 +255,12 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
         p.vy = (p.vy + (p.ty - p.y) * 0.012) * 0.86;
         p.x += p.vx;
         p.y += p.vy;
-        // Fast filings point along their flight; settled ones follow the field (π-periodic).
+        // Fast picks point along their flight; settled ones follow the field.
         const speed = Math.abs(p.vx) + Math.abs(p.vy);
         const target = speed > 2.2 ? Math.atan2(p.vy, p.vx) : fieldAngle(p);
-        let diff = (target - p.a) % Math.PI;
-        if (diff > Math.PI / 2) diff -= Math.PI;
-        else if (diff < -Math.PI / 2) diff += Math.PI;
+        let diff = (target - p.a) % (Math.PI * 2);
+        if (diff > Math.PI) diff -= Math.PI * 2;
+        else if (diff < -Math.PI) diff += Math.PI * 2;
         p.a += diff * 0.16;
       }
       render();
@@ -274,6 +273,19 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
       mouse.on = mouse.x > -R && mouse.y > -R && mouse.x < W + R && mouse.y < H + R;
     };
     const onLeave = () => (mouse.on = false);
+    // A riff knocks the swarm outward from the glyph's centre, harder for louder hits.
+    const onHit = (e: Event) => {
+      const k = Math.min(1.5, (e as CustomEvent<number>).detail ?? 1);
+      const cx = W * 0.56, cy = H * 0.47;
+      for (const p of parts) {
+        const dx = p.x - cx, dy = p.y - cy, d = Math.hypot(dx, dy) || 1;
+        const f = (2 + Math.random() * 5) * k;
+        p.vx += (dx / d) * f;
+        p.vy += (dy / d) * f;
+        p.heat = Math.min(1, p.heat + 0.35 * k * Math.random());
+      }
+      if (!running) start();
+    };
 
     let raf = 0, running = false, visible = true, last = 0, elapsed = 0;
     const loop = (now: number) => {
@@ -315,6 +327,7 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
     if (!still) {
       window.addEventListener("pointermove", onMove, { passive: true });
       document.documentElement.addEventListener("pointerleave", onLeave);
+      window.addEventListener("amp:hit", onHit);
     }
     // The monogram needs the display face; re-sample once it has loaded.
     let alive = true;
@@ -330,6 +343,7 @@ export function FilingsField({ className = "", interval = 3600 }: { className?: 
       document.removeEventListener("visibilitychange", sync);
       window.removeEventListener("pointermove", onMove);
       document.documentElement.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("amp:hit", onHit);
     };
   }, [interval]);
 

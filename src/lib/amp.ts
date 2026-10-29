@@ -57,6 +57,11 @@ function chain() {
   return ctx;
 }
 
+/** Every riff is also visual: the stage and the pick swarm react to `amp:hit`, sound on or off. */
+function hit(strength: number) {
+  if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("amp:hit", { detail: strength }));
+}
+
 export const amp = {
   get on() {
     return on;
@@ -75,7 +80,8 @@ export const amp = {
     if (next) await chain().resume();
   },
   /** One plucked note. `delay` in seconds lets chords strum. */
-  pluck(freq: number, { velocity = 1, delay = 0, length = 1.6 } = {}) {
+  pluck(freq: number, { velocity = 1, delay = 0, length = 1.6, visual = true } = {}) {
+    if (visual) hit(velocity * 0.3);
     if (!on) return;
     const ac = chain();
     if (ac.state !== "running") return;
@@ -98,7 +104,8 @@ export const amp = {
   },
   /** Root–fifth–octave power chord, strummed down. */
   power(root = OPEN_STRINGS[0], velocity = 1) {
-    [1, 1.4983, 2].forEach((m, i) => amp.pluck(root * m, { velocity, delay: i * 0.012 }));
+    hit(velocity);
+    [1, 1.4983, 2].forEach((m, i) => amp.pluck(root * m, { velocity, delay: i * 0.012, visual: false }));
   },
 };
 

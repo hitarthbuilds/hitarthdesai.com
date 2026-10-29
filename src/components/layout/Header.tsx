@@ -25,13 +25,11 @@ export function RollText({ children }: { children: string }) {
   );
 }
 
-/** HD stamped into a small machined plate, plus the name. */
+/** A blackletter band logo in chrome, plus the name. */
 export function Wordmark() {
   return (
     <span className="group inline-flex items-center gap-3">
-      <span className="brushed grid h-9 w-9 place-items-center !rounded-[10px]">
-        <span className="display chrome-text chrome-hover text-[15px] leading-none tracking-[-0.06em]">HD</span>
-      </span>
+      <span className="blackletter chrome-text chrome-hover text-[30px] leading-none">HD</span>
       <span className="hidden font-display text-[17px] font-bold tracking-[-0.03em] text-chrome sm:inline" style={{ fontVariationSettings: '"wdth" 85' }}>
         {PROFILE.name}
       </span>

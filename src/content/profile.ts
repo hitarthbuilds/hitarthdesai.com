@@ -39,12 +39,12 @@ export const PROFILE = {
   tagline: "I build the layer that makes LLMs reliable in production.",
   /** Hero headline, split into display lines. `accent` renders in molten serif italic. */
   headline: [
-    [{ text: "I forge the layer" }],
+    [{ text: "I build the layer" }],
     [{ text: "that makes LLMs" }],
     [{ text: "reliable", accent: true }, { text: " in" }],
     [{ text: "production." }],
   ] as { text: string; accent?: boolean }[][],
-  motto: "Forged, not demoed",
+  motto: "Played loud. Shipped reliable.",
   guitar: "Schecter Demon-6",
 
   status: {
