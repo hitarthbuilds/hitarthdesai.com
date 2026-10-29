@@ -1,0 +1,384 @@
+@import "tailwindcss";
+
+/* ───────────────────────── Tokens: "Forged" (dark only) ───────────────────────── */
+:root {
+  --void: #08090b;
+  --steel-1: #101216;
+  --steel-2: #171a1f;
+  --steel-3: #20242b;
+  --line: rgba(220, 228, 240, 0.08);
+  --line-2: rgba(220, 228, 240, 0.16);
+  --chrome: #e9edf2;
+  --mute: #9aa1ab;
+  --dim: #6a717c;
+  --forge: #ff6a1a;
+  --ember: #ffb547;
+  --titanium: #7fb6ff;
+  --gold: #d9b45a;
+  --rust: #c2410c;
+  --radius: 18px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --chrome-grad: linear-gradient(180deg, #fdfdfd 0%, #a9b0ba 36%, #5c636d 52%, #e9edf2 72%, #8b929c 100%);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-void: var(--void);
+  --color-steel-1: var(--steel-1);
+  --color-steel-2: var(--steel-2);
+  --color-steel-3: var(--steel-3);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-chrome: var(--chrome);
+  --color-mute: var(--mute);
+  --color-dim: var(--dim);
+  --color-forge: var(--forge);
+  --color-ember: var(--ember);
+  --color-titanium: var(--titanium);
+  --color-gold: var(--gold);
+  --color-rust: var(--rust);
+  --font-sans: var(--ff-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--ff-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-display: var(--ff-display), var(--ff-sans), sans-serif;
+  --font-serif: var(--ff-serif), Georgia, serif;
+}
+
+/* ───────────────────────── Base ───────────────────────── */
+html {
+  background: var(--void);
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  background: var(--void);
+  color: var(--chrome);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+::selection {
+  background: var(--forge);
+  color: var(--void);
+}
+:focus-visible {
+  outline: 2px solid var(--forge);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+input:focus-visible,
+textarea:focus-visible {
+  outline: none;
+}
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--steel-3) transparent;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ───────────────────────── Texture ───────────────────────── */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain 0.9s steps(6) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-4%, 3%); }
+  40% { transform: translate(3%, -5%); }
+  60% { transform: translate(-6%, -2%); }
+  80% { transform: translate(5%, 4%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ───────────────────────── Surfaces ───────────────────────── */
+
+/* Brushed steel: hairline grain + noise, a 1px top highlight and a hard bottom shadow. */
+.brushed {
+  position: relative;
+  isolation: isolate;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 3px, rgba(0, 0, 0, 0.03) 3px 4px, transparent 4px 7px),
+    linear-gradient(180deg, var(--steel-2), var(--steel-1));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 0 rgba(0, 0, 0, 0.55), 0 18px 40px -24px rgba(0, 0, 0, 0.9);
+}
+.brushed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2 0.04' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* Machined plate: brushed steel + four corner bolts + a pointer-tracking sheen (--mx/--my). */
+.plate {
+  --mx: 50%;
+  --my: 50%;
+  background:
+    radial-gradient(circle at 14px 14px, #b9c0ca 0 1.5px, #3a3f47 2.5px, transparent 3.5px),
+    radial-gradient(circle at calc(100% - 14px) 14px, #b9c0ca 0 1.5px, #3a3f47 2.5px, transparent 3.5px),
+    radial-gradient(circle at 14px calc(100% - 14px), #b9c0ca 0 1.5px, #3a3f47 2.5px, transparent 3.5px),
+    radial-gradient(circle at calc(100% - 14px) calc(100% - 14px), #b9c0ca 0 1.5px, #3a3f47 2.5px, transparent 3.5px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.022) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, var(--steel-2), var(--steel-1));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 0 rgba(0, 0, 0, 0.55);
+  position: relative;
+  isolation: isolate;
+}
+.plate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+  background: linear-gradient(115deg, transparent calc(var(--mx) - 14%), rgba(233, 237, 242, 0.09) var(--mx), transparent calc(var(--mx) + 14%));
+}
+.plate:hover::before {
+  opacity: 1;
+}
+.engraved {
+  font-family: var(--font-mono);
+  color: var(--mute);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.06), 0 -1px 0 rgba(0, 0, 0, 0.6);
+}
+
+/* ───────────────────────── Type ───────────────────────── */
+.display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.88;
+  font-variation-settings: "wdth" 80, "opsz" 96;
+}
+.serif-i {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+
+/*
+ * Liquid-chrome lettering. The base is a vertical studio gradient, so per-character
+ * copies (SplitText) still line up across a line; the sheen layer on top is swept by
+ * animating --sheen (per char, staggered) or by hover.
+ */
+.chrome-text,
+.hl-chrome:not(.is-split),
+.hl-chrome.is-split .ch {
+  --sheen: 130%;
+  background-image: linear-gradient(105deg, transparent calc(var(--sheen) - 12%), rgba(255, 255, 255, 0.95) var(--sheen), transparent calc(var(--sheen) + 12%)), var(--chrome-grad);
+  background-size: 100% 100%, 100% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+@property --sheen {
+  syntax: "<percentage>";
+  initial-value: 130%;
+  inherits: true;
+}
+.chrome-hover {
+  transition: --sheen 0s;
+}
+.chrome-hover:hover {
+  --sheen: -30%;
+  transition: --sheen 0.9s var(--ease-out);
+}
+
+/* Hero headline masks: pad the clip box so ascenders, descenders and italic overhang survive
+   the mask (the negative margin keeps layout identical). */
+.hl .ch-mask {
+  padding: 0.16em 0.05em 0.12em;
+  margin: -0.16em -0.05em -0.12em;
+}
+.hl .ch {
+  padding: 0.16em 0 0.12em;
+  margin: -0.16em 0 -0.12em;
+}
+.hl .hl-accent .ch-mask {
+  padding-inline: 0.12em;
+  margin-inline: -0.12em;
+}
+
+/* Heated metal. The hero animates color/text-shadow from white-hot to forge with GSAP. */
+.molten {
+  color: var(--forge);
+  text-shadow: 0 0 18px rgba(255, 106, 26, 0.35);
+}
+
+/* Variable fonts expose overlapping contours under a transparent-fill stroke:
+   paint a solid --void fill over the stroke instead. */
+.text-outline {
+  color: var(--void);
+  -webkit-text-fill-color: var(--void);
+  -webkit-text-stroke: 2px var(--line-2);
+  paint-order: stroke fill;
+}
+
+/* ───────────────────────── Controls ───────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 52px;
+  padding: 0 1.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: color 0.35s var(--ease-out), border-color 0.35s, box-shadow 0.35s;
+  white-space: nowrap;
+}
+.btn-forge {
+  background: linear-gradient(180deg, #ff8a3d, var(--forge) 55%, #e2550d);
+  color: var(--void);
+  box-shadow: inset 0 1px 0 rgba(255, 230, 200, 0.55), 0 2px 0 #7a2a06, 0 10px 30px -10px rgba(255, 106, 26, 0.6);
+}
+.btn-forge:hover {
+  box-shadow: inset 0 1px 0 rgba(255, 230, 200, 0.6), 0 2px 0 #7a2a06, 0 14px 44px -8px rgba(255, 106, 26, 0.85);
+}
+.btn-steel {
+  color: var(--chrome);
+  border: 1px solid var(--line-2);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.btn-steel:hover {
+  border-color: rgba(233, 237, 242, 0.5);
+}
+.btn .btn-fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--chrome-grad);
+  transform: translateY(101%);
+  transition: transform 0.5s var(--ease-out);
+}
+.btn-steel:hover .btn-fill {
+  transform: translateY(0);
+}
+.btn-steel:hover {
+  color: var(--void);
+}
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--mute);
+  background: rgba(16, 18, 22, 0.5);
+  transition: color 0.3s, border-color 0.3s, background 0.3s;
+}
+.icon-btn:hover {
+  color: var(--chrome);
+  border-color: var(--line-2);
+  background: rgba(32, 36, 43, 0.7);
+}
+.kbd {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 6px;
+  border: 1px solid var(--line-2);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  color: var(--mute);
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 6px 14px 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  background: rgba(16, 18, 22, 0.66);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.forge-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--forge);
+  box-shadow: 0 0 10px var(--forge);
+}
+.forge-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--forge);
+  animation: forge-ping 1.8s var(--ease-out) infinite;
+}
+@keyframes forge-ping {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+
+/* ───────────────────────── Preloader ───────────────────────── */
+html[data-pl] .preloader {
+  display: none;
+}
+
+/* ───────────────────────── Reduced motion ───────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    display: none;
+  }
+  .forge-dot::after {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
