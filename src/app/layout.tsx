@@ -7,6 +7,7 @@ import { Header } from "@/components/layout/Header";
 import { Preloader } from "@/components/layout/Preloader";
 import { Footer } from "@/components/layout/Footer";
 import { PROFILE } from "@/content/profile";
+import { IS_CANONICAL_HOST } from "@/lib/site";
 
 const sans = Geist({ subsets: ["latin"], variable: "--ff-sans", display: "swap" });
 const mono = Geist_Mono({ subsets: ["latin"], variable: "--ff-mono", display: "swap" });
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
   title: { default: `${PROFILE.name} · ${PROFILE.title}`, template: `%s · ${PROFILE.name}` },
   description: `${PROFILE.tagline} ${PROFILE.bio}`,
   alternates: { canonical: "/" },
+  robots: IS_CANONICAL_HOST ? { index: true, follow: true } : { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
