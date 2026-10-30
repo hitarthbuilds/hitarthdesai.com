@@ -12,7 +12,7 @@ export function Footer() {
             {PROFILE.title} · {PROFILE.location.city}, {PROFILE.location.countryCode}
           </p>
         </div>
-        <nav aria-label="Footer" className="flex flex-wrap gap-x-10 gap-y-3 text-[14px] text-mute">
+        <nav aria-label="Footer" className="flex flex-wrap gap-x-8 gap-y-1 text-[14px] text-mute [&>a]:min-w-8 [&>a]:py-2.5">
           <Link href="/#discography" className="hover:text-chrome">
             Work
           </Link>

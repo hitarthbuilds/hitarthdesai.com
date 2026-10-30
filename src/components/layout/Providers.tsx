@@ -1,12 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger, prefersReduced } from "@/lib/gsap";
 import { Cursor } from "./Cursor";
+import { CommandPalette, type PaletteMode, type PostLink } from "./CommandPalette";
 
-type Ui = { lenis: Lenis | null };
+type Ui = { lenis: Lenis | null; openPalette: (mode?: PaletteMode) => void };
 
 const UiContext = createContext<Ui | null>(null);
 
@@ -16,8 +17,9 @@ export function useUi() {
   return ctx;
 }
 
-export function Providers({ children }: { children: ReactNode }) {
+export function Providers({ children, posts }: { children: ReactNode; posts: PostLink[] }) {
   const [lenis, setLenis] = useState<Lenis | null>(null);
+  const [palette, setPalette] = useState<{ open: boolean; mode: PaletteMode }>({ open: false, mode: "search" });
   const pathname = usePathname();
 
   // One Lenis instance, driven by GSAP's ticker so ScrollTrigger stays in sync.
@@ -41,11 +43,47 @@ export function Providers({ children }: { children: ReactNode }) {
     return () => cancelAnimationFrame(id);
   }, [pathname, lenis]);
 
-  const value = useMemo<Ui>(() => ({ lenis }), [lenis]);
+  const openPalette = useCallback((mode: PaletteMode = "search") => setPalette({ open: true, mode }), []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setPalette((p) => ({ open: !p.open, mode: "search" }));
+      } else if (e.key === "/" && !(e.target as HTMLElement)?.closest("input,textarea,select,[contenteditable]")) {
+        e.preventDefault();
+        setPalette({ open: true, mode: "search" });
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  useEffect(() => {
+    if (palette.open) lenis?.stop();
+    else lenis?.start();
+  }, [palette.open, lenis]);
+
+  const value = useMemo<Ui>(() => ({ lenis, openPalette }), [lenis, openPalette]);
 
   return (
     <UiContext.Provider value={value}>
       {children}
+      <button type="button" onClick={() => openPalette("ask")} className="ask-chip" aria-label="Ask the Roadie, the AI concierge" data-cursor="ask AI">
+        <span className="text-ember" aria-hidden>
+          ✦
+        </span>
+        Ask
+        <span className="hidden font-mono text-[10px] uppercase tracking-[0.16em] text-dim sm:inline">AI</span>
+      </button>
+      <CommandPalette
+        open={palette.open}
+        mode={palette.mode}
+        posts={posts}
+        lenis={lenis}
+        onMode={(mode) => setPalette((p) => ({ ...p, mode }))}
+        onClose={() => setPalette((p) => ({ ...p, open: false }))}
+      />
       <Cursor />
     </UiContext.Provider>
   );

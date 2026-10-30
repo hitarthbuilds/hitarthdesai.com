@@ -46,6 +46,14 @@
   --font-black: var(--ff-black), Georgia, serif;
 }
 
+@property --sheen {
+  syntax: "<percentage>";
+  initial-value: 130%;
+  inherits: true;
+}
+
+/* Custom CSS lives in cascade layers so Tailwind utilities (hidden, sizes, colours) override it. */
+@layer base {
 /* ───────────────────────── Base ───────────────────────── */
 html {
   background: var(--void);
@@ -94,6 +102,9 @@ html.lenis body {
   overflow: hidden;
 }
 
+}
+
+@layer components {
 /* ───────────────────────── Texture ───────────────────────── */
 .grain {
   position: fixed;
@@ -213,11 +224,6 @@ html.lenis body {
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-}
-@property --sheen {
-  syntax: "<percentage>";
-  initial-value: 130%;
-  inherits: true;
 }
 .chrome-hover {
   transition: --sheen 0s;
@@ -1081,4 +1087,39 @@ html[data-pl] .preloader {
   color: var(--forge);
   border-color: var(--forge);
   padding-left: 0.6em;
+}
+
+/* ───────────────────────── Palette + Ask ───────────────────────── */
+.palette {
+  background: rgba(16, 18, 22, 0.86);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--line-2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 40px 120px -20px rgba(0, 0, 0, 0.85);
+}
+.ask-chip {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 70;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 106, 26, 0.45);
+  background: rgba(12, 13, 16, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--chrome);
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 12px 40px -12px rgba(255, 106, 26, 0.5);
+  transition: transform 0.4s var(--ease-spring), border-color 0.3s;
+}
+.ask-chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--forge);
+}
 }

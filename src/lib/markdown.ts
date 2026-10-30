@@ -2,21 +2,13 @@
 // and stable heading ids for the table of contents.
 import { Marked, type Tokens } from "marked";
 import { createHighlighter, type Highlighter } from "shiki";
+import { slugify } from "./slug";
 
 export type Heading = { id: string; text: string; depth: 2 | 3 };
 
 const LANGS = ["python", "typescript", "javascript", "json", "bash", "yaml", "sql", "toml"];
 let hl: Promise<Highlighter> | null = null;
 const highlighter = () => (hl ??= createHighlighter({ themes: ["vitesse-dark"], langs: LANGS }));
-
-const slugify = (s: string) =>
-  s
-    .toLowerCase()
-    .replace(/<[^>]+>/g, "")
-    .replace(/&[a-z]+;/g, "")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-");
 
 const escape = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 

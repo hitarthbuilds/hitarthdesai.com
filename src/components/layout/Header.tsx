@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { PROFILE } from "@/content/profile";
 import { amp, useAmp } from "@/lib/amp";
+import { useUi } from "./Providers";
 import { onPreloaderDone } from "./Preloader";
 
 const NAV = [
@@ -60,6 +61,7 @@ function AmpSwitch() {
 
 export function Header() {
   const bar = useRef<HTMLElement>(null);
+  const { openPalette } = useUi();
 
   useGSAP((_, contextSafe) => {
     const el = bar.current!;
@@ -98,9 +100,27 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <div className="ml-auto md:ml-0">
+        <button
+          type="button"
+          onClick={() => openPalette()}
+          className="ml-auto hidden h-10 items-center gap-2.5 rounded-full border border-line pl-3.5 pr-2 text-[13px] text-mute transition-colors hover:border-line-2 hover:text-chrome md:ml-0 lg:flex"
+          aria-label="Open the command palette"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden>
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          Search or ask
+          <span className="kbd">⌘K</span>
+        </button>
+        <div className="ml-auto lg:ml-0">
           <AmpSwitch />
         </div>
+        <button type="button" onClick={() => openPalette()} className="icon-btn !h-10 !w-10 shrink-0 lg:hidden" aria-label="Open menu and search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+            <path d="M4 7h16M4 12h16M4 17h10" />
+          </svg>
+        </button>
         <Link href="/#encore" className="btn btn-steel hidden !h-10 !px-4 !text-[13px] sm:inline-flex">
           <span className="btn-fill" />
           Let&apos;s talk

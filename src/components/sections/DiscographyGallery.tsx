@@ -64,7 +64,7 @@ function Sleeve({ p, stats }: { p: Project; stats?: ProjectStats }) {
             </li>
           ))}
         </ul>
-        <div className="mt-5 flex flex-wrap items-center gap-5 text-[14px]">
+        <div className="mt-3 flex flex-wrap items-center gap-x-5 text-[14px] [&>a]:py-2.5">
           <Link href={`/projects/${p.slug}`} className="group/l inline-flex items-center gap-2 font-semibold text-chrome">
             Liner notes
             <ArrowRight className="h-4 w-4 transition-transform group-hover/l:translate-x-1" />

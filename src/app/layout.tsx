@@ -8,6 +8,7 @@ import { Preloader } from "@/components/layout/Preloader";
 import { Footer } from "@/components/layout/Footer";
 import { PROFILE } from "@/content/profile";
 import { IS_CANONICAL_HOST } from "@/lib/site";
+import { getPosts } from "@/lib/posts";
 
 const sans = Geist({ subsets: ["latin"], variable: "--ff-sans", display: "swap" });
 const mono = Geist_Mono({ subsets: ["latin"], variable: "--ff-mono", display: "swap" });
@@ -18,9 +19,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(PROFILE.url),
   title: { default: `${PROFILE.name} · ${PROFILE.title}`, template: `%s · ${PROFILE.name}` },
   description: `${PROFILE.tagline} ${PROFILE.bio}`,
-  alternates: { canonical: "/" },
-  openGraph: { type: "website", siteName: PROFILE.name, title: `${PROFILE.name} · ${PROFILE.title}`, description: PROFILE.tagline, url: PROFILE.url, images: [{ url: "/og.png", width: 1200, height: 630 }] },
-  twitter: { card: "summary_large_image", site: "@hitarthbuilds", creator: "@hitarthbuilds", images: ["/og.png"] },
+  openGraph: { type: "website", siteName: PROFILE.name, title: `${PROFILE.name} · ${PROFILE.title}`, description: PROFILE.tagline, url: PROFILE.url },
+  twitter: { card: "summary_large_image", site: "@hitarthbuilds", creator: "@hitarthbuilds" },
+  alternates: { canonical: "/", types: { "application/rss+xml": [{ url: "/rss.xml", title: "Liner notes" }] } },
   robots: IS_CANONICAL_HOST ? { index: true, follow: true } : { index: false, follow: false },
 };
 
@@ -36,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script id="preloader-seen" strategy="beforeInteractive">
           {`try{if(sessionStorage.getItem('pl'))document.documentElement.dataset.pl='1'}catch(e){}`}
         </Script>
-        <Providers>
+        <Providers posts={getPosts().map((p) => ({ slug: p.slug, title: p.title }))}>
           <a href="#main" className="sr-only z-[110] rounded-full bg-forge px-4 py-2 font-semibold text-void focus:not-sr-only focus:fixed focus:left-4 focus:top-4">
             Skip to content
           </a>
