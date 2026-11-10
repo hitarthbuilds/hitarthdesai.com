@@ -38,8 +38,13 @@ export function Providers({ children, posts }: { children: ReactNode; posts: Pos
   }, []);
 
   useEffect(() => {
-    lenis?.scrollTo(0, { immediate: true, force: true });
-    const id = requestAnimationFrame(() => ScrollTrigger.refresh());
+    const id = requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+      const hash = window.location.hash.slice(1);
+      const target = hash ? document.getElementById(hash) : null;
+      if (lenis) lenis.scrollTo(target ?? 0, { immediate: true, force: true });
+      else target?.scrollIntoView();
+    });
     return () => cancelAnimationFrame(id);
   }, [pathname, lenis]);
 

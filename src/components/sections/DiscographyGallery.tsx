@@ -5,20 +5,23 @@ import { useRef } from "react";
 import { gsap, prefersReduced, useGSAP } from "@/lib/gsap";
 import type { Project } from "@/content/projects";
 import type { ProjectStats } from "@/lib/stats";
-import { AlbumArt } from "../viz/AlbumArt";
+import { ProjectArtwork } from "../viz/ProjectArtwork";
 import { Odometer } from "../fx/Odometer";
 import { ArrowRight } from "../ui/Icons";
 
 /** A record sleeve: the album art is a live visual; a vinyl slides out and spins on hover. */
-function Sleeve({ p, stats }: { p: Project; stats?: ProjectStats }) {
+export function Sleeve({ p, stats }: { p: Project; stats?: ProjectStats }) {
   return (
-    <article data-card className="sleeve group relative flex w-[min(86vw,500px)] shrink-0 flex-col gap-5 lg:w-[min(44svh,460px)]">
+    <article
+      data-card
+      className={`sleeve group relative flex min-w-0 flex-col gap-5 ${p.clientWork ? "" : "w-[min(86vw,500px)] shrink-0 lg:w-[min(44svh,460px)]"}`}
+    >
       <Link href={`/projects/${p.slug}`} className="relative block aspect-square" aria-label={`${p.name}: liner notes`} data-cursor="liner notes">
         <span className="vinyl" aria-hidden>
           <span className="vinyl-label">{p.track}</span>
         </span>
         <span className="sleeve-art">
-          <AlbumArt visual={p.visual} />
+          <ProjectArtwork project={p} sizes="(min-width: 1280px) 410px, (min-width: 640px) 45vw, 90vw" />
           <span className="absolute right-4 top-4 rounded-full border border-line-2 bg-void/70 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-chrome/80">
             {p.format}
           </span>
@@ -30,7 +33,7 @@ function Sleeve({ p, stats }: { p: Project; stats?: ProjectStats }) {
           <span>{p.status}</span>
         </p>
         <h3 className="display mt-3 text-[clamp(2rem,3.4vw,3.2rem)] text-chrome">{p.name}</h3>
-        <p className="mt-3 text-[15px] leading-relaxed text-mute lg:line-clamp-3">{p.blurb}</p>
+        <p className={`mt-3 text-[15px] leading-relaxed text-mute ${p.clientWork ? "" : "lg:line-clamp-3"}`}>{p.blurb}</p>
         {stats && (stats.downloadsMonth !== null || stats.stars !== null) && (
           <dl className="mt-5 flex flex-wrap gap-6 font-mono">
             {stats.downloadsMonth !== null && (

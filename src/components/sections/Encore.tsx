@@ -78,7 +78,7 @@ export function Encore() {
           </Magnetic>
           <div>
             <p className="max-w-xl text-[18px] leading-relaxed text-mute">
-              Currently at InfraDock AI. <span className="text-chrome">{PROFILE.status.label}.</span> If you are hiring for the layer that keeps LLMs honest in production, I would love to hear about it.
+              Currently at InfraDock AI. <span className="text-chrome">{PROFILE.status.label}.</span> For a freelance website, commerce build, or workflow tool, tell me what you want people to be able to do.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               {PROFILE.bookingUrl && (

@@ -16,6 +16,9 @@ export function Footer() {
           <Link href="/#discography" className="hover:text-chrome">
             Work
           </Link>
+          <Link href="/#client-work" className="hover:text-chrome">
+            Client work
+          </Link>
           <Link href="/blog" className="hover:text-chrome">
             Writing
           </Link>

@@ -10,6 +10,7 @@ import { onPreloaderDone } from "./Preloader";
 
 const NAV = [
   { href: "/#discography", label: "Work" },
+  { href: "/#client-work", label: "Client work" },
   { href: "/#rig", label: "Stack" },
   { href: "/#tour", label: "Experience" },
   { href: "/blog", label: "Writing" },
@@ -93,7 +94,7 @@ export function Header() {
         <Link href="/" aria-label={`${PROFILE.name}, home`} data-cursor="home">
           <Wordmark />
         </Link>
-        <nav className="ml-auto hidden items-center gap-8 text-[14px] text-mute md:flex" aria-label="Primary">
+        <nav className="ml-auto hidden items-center gap-5 whitespace-nowrap text-[14px] text-mute lg:flex xl:gap-8" aria-label="Primary">
           {NAV.map((n) => (
             <Link key={n.href} href={n.href} className="group transition-colors hover:text-chrome">
               <RollText>{n.label}</RollText>

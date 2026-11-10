@@ -1,37 +1,38 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PROJECTS } from "@/content/projects";
+import { ALL_PROJECTS, PROJECTS } from "@/content/projects";
+import { CLIENT_PROJECTS } from "@/content/client-projects";
 import { formatDate, getPosts } from "@/lib/posts";
-import { AlbumArt } from "@/components/viz/AlbumArt";
+import { ProjectArtwork } from "@/components/viz/ProjectArtwork";
 import { ArrowRight } from "@/components/ui/Icons";
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return PROJECTS.map((p) => ({ slug: p.slug }));
+  return ALL_PROJECTS.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const p = PROJECTS.find((x) => x.slug === slug);
+  const p = ALL_PROJECTS.find((x) => x.slug === slug);
   return p ? { title: p.name, description: p.blurb, alternates: { canonical: `/projects/${p.slug}` } } : {};
 }
 
 /** Liner notes for one release: what it is, what it's built with, and the writing behind it. */
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const i = PROJECTS.findIndex((x) => x.slug === slug);
-  if (i < 0) notFound();
-  const p = PROJECTS[i];
-  const next = PROJECTS[(i + 1) % PROJECTS.length];
+  const p = ALL_PROJECTS.find((x) => x.slug === slug);
+  if (!p) notFound();
+  const collection = p.clientWork ? CLIENT_PROJECTS : PROJECTS;
+  const next = collection[(collection.indexOf(p) + 1) % collection.length];
   const related = getPosts().filter((post) => post.tags.some((t) => t.toLowerCase() === p.name.toLowerCase()));
   const metrics = p.metrics.filter((m) => m.value !== null);
 
   return (
     <article className="mx-auto max-w-[1440px] px-5 pb-24 pt-32 sm:px-8 lg:px-12">
-      <Link href="/#discography" className="eyebrow inline-flex items-center gap-2 transition-colors hover:text-chrome">
-        ← Discography
+      <Link href={p.clientWork ? "/#client-work" : "/#discography"} className="eyebrow inline-flex items-center gap-2 transition-colors hover:text-chrome">
+        ← {p.clientWork ? "Client work" : "Discography"}
       </Link>
       <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:items-start">
         <div>
@@ -71,12 +72,30 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             </dl>
           )}
         </div>
-        <div className="sleeve relative aspect-square">
+        <div className={`sleeve relative ${p.clientWork ? "aspect-video" : "aspect-square"}`}>
           <span className="sleeve-art">
-            <AlbumArt visual={p.visual} />
+            <ProjectArtwork project={p} sizes="(min-width: 1440px) 615px, (min-width: 1024px) 45vw, 95vw" />
           </span>
         </div>
       </div>
+
+      {p.clientWork && (
+        <section className="mt-20 border-t border-line pt-8" aria-labelledby="client-notes-title">
+          <h2 id="client-notes-title" className="eyebrow text-forge">Liner notes · the work behind the site</h2>
+          <div className="mt-8 grid gap-x-12 gap-y-8 md:grid-cols-2 xl:grid-cols-3">
+            {p.clientWork.sections.map(({ title, body }) => (
+              <div key={title}>
+                <h3 className="font-display text-2xl font-bold text-chrome">{title}</h3>
+                <p className="mt-3 max-w-xl text-[16px] leading-relaxed text-mute">{body}</p>
+              </div>
+            ))}
+          </div>
+          {p.clientWork.note && <p className="mt-8 max-w-2xl text-sm leading-relaxed text-mute">{p.clientWork.note}</p>}
+          <Link href="/#encore" className="btn btn-forge mt-9">
+            Discuss a similar project <ArrowRight />
+          </Link>
+        </section>
+      )}
 
       {related.length > 0 && (
         <section className="mt-24" aria-labelledby="related-title">

@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { gsap, prefersReduced, useGSAP } from "@/lib/gsap";
-import type { Project } from "@/content/projects";
+import type { AlbumVisual } from "@/content/projects";
 
 /** Loops `build` while the art is on screen; reduced motion shows the timeline's end state. */
 function useLoop(build: (tl: gsap.core.Timeline, q: (s: string) => Element[]) => void) {
@@ -208,7 +208,7 @@ function LedgerArt() {
   );
 }
 
-export function AlbumArt({ visual }: { visual: Project["visual"] }) {
+export function AlbumArt({ visual }: { visual: AlbumVisual }) {
   if (visual === "extract") return <ExtractArt />;
   if (visual === "eval") return <EvalArt />;
   if (visual === "gauge") return <GaugeArt />;

@@ -147,8 +147,8 @@ export function Ore() {
           <div data-hero-in className="flex flex-col items-start gap-6 lg:items-end">
             <div className="flex flex-wrap gap-3">
               <Magnetic>
-                <Link href="/#discography" className="btn btn-forge !h-14 !px-7 !text-[16px]" data-cursor="discography" onClick={() => amp.power(82.41, 0.8)}>
-                  See the work
+                <Link href="/#client-work" className="btn btn-forge !h-14 !px-7 !text-[16px]" data-cursor="client work" onClick={() => amp.power(82.41, 0.8)}>
+                  See client work
                   <ArrowRight />
                 </Link>
               </Magnetic>

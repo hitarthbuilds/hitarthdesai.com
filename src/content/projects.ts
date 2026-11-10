@@ -1,23 +1,35 @@
+import { CLIENT_PROJECTS } from "./client-projects";
+
 /**
  * The discography. Copy comes from the current site; `format` and `side` are the record
  * framing. `metrics` are TODO(hitarth) and render only when filled in.
  */
+export type AlbumVisual = "extract" | "eval" | "gauge" | "grid" | "ledger";
+
+type ClientWork = {
+  image: string;
+  alt: string;
+  sections: { title: string; body: string }[];
+  note?: string;
+};
+
 export type Project = {
   slug: string;
   name: string;
   format: string;
   status: string;
-  side: "A" | "B";
+  side: "A" | "B" | "C";
   track: string;
   blurb: string;
   tech: string[];
   links: { label: string; href: string }[];
-  /** Which mini-visual the record plays. */
-  visual: "extract" | "eval" | "gauge" | "grid" | "ledger";
   /** Live stats keys (see lib/stats.ts). */
   stats?: { pypi?: string; github?: string };
   metrics: { label: string; value: string | null }[];
-};
+} & (
+  | { visual: AlbumVisual; clientWork?: never }
+  | { visual?: never; clientWork: ClientWork }
+);
 
 export const PROJECTS: Project[] = [
   {
@@ -88,3 +100,5 @@ export const PROJECTS: Project[] = [
     metrics: [],
   },
 ];
+
+export const ALL_PROJECTS = [...PROJECTS, ...CLIENT_PROJECTS];

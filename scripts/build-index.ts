@@ -3,7 +3,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { PROFILE } from "../src/content/profile";
-import { PROJECTS } from "../src/content/projects";
+import { ALL_PROJECTS } from "../src/content/projects";
 import { FAQ } from "../src/content/faq";
 import { parseFrontmatter } from "../src/lib/posts";
 import { slugify } from "../src/lib/slug";
@@ -19,7 +19,13 @@ add("Education", "/#tour", `${PROFILE.education.degree}, ${PROFILE.education.sch
 add("Stack", "/#rig", Object.entries(PROFILE.stack).map(([g, items]) => `${g}: ${items.join(", ")}.`).join(" "));
 add("Off stage", "/#iron-and-strings", `${PROFILE.offStage} Achievements: ${PROFILE.achievements.join("; ")}. Guitar: ${PROFILE.guitar}.`);
 add("Links", "/#encore", PROFILE.socials.map((s) => `${s.label}: ${s.href}`).join(". "));
-for (const p of PROJECTS) add(p.name, `/projects/${p.slug}`, `${p.name} (${p.status}). ${p.blurb} Built with ${p.tech.join(", ")}. ${p.links.map((l) => `${l.label}: ${l.href}`).join(". ")}`);
+for (const p of ALL_PROJECTS) {
+  const url = `/projects/${p.slug}`;
+  add(p.name, url, `${p.name} (${p.status}). ${p.blurb} Built with ${p.tech.join(", ")}. ${p.links.map((l) => `${l.label}: ${l.href}`).join(". ")} ${p.clientWork?.note ?? ""}`);
+  for (const section of p.clientWork?.sections ?? []) {
+    add(`${p.name} · ${section.title}`, url, `${p.name}: ${section.title}. ${section.body}`);
+  }
+}
 for (const f of FAQ) add(f.q, "/#soundcheck", `${f.q} ${f.a}`);
 
 // Posts: one chunk per H2 section, split further if a section runs long.

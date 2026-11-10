@@ -6,7 +6,7 @@ import type Lenis from "lenis";
 import { gsap, prefersReduced } from "@/lib/gsap";
 import { amp } from "@/lib/amp";
 import { PROFILE, TRACKS } from "@/content/profile";
-import { PROJECTS } from "@/content/projects";
+import { ALL_PROJECTS } from "@/content/projects";
 import { downloadResume } from "@/lib/resume";
 
 export type PaletteMode = "search" | "ask";
@@ -91,7 +91,8 @@ export function CommandPalette({ open, mode, posts, lenis, onMode, onClose }: { 
     () => [
       { id: "ask", group: "AI", label: "Ask the Roadie", hint: "AI answers about Hitarth, with sources", glyph: "✦", run: () => onMode("ask") },
       ...TRACKS.map((t) => ({ id: `t-${t.id}`, group: "Tracks", label: `${t.n} · ${t.name}`, hint: `was ${t.was}`, glyph: "♪", run: () => go(`/#${t.id}`) })),
-      ...PROJECTS.map((p) => ({ id: `p-${p.slug}`, group: "Discography", label: p.name, hint: `${p.format} · ${p.status}`, glyph: "◉", run: () => go(`/projects/${p.slug}`) })),
+      { id: "t-client-work", group: "Tracks", label: "Client work", hint: "Freelance websites and software", glyph: "♪", run: () => go("/#client-work") },
+      ...ALL_PROJECTS.map((p) => ({ id: `p-${p.slug}`, group: p.clientWork ? "Client work" : "Discography", label: p.name, hint: `${p.format} · ${p.status}`, glyph: "◉", run: () => go(`/projects/${p.slug}`) })),
       ...posts.map((p) => ({ id: `b-${p.slug}`, group: "Liner notes", label: p.title, hint: "Post", glyph: "¶", run: () => go(`/blog/${p.slug}`) })),
       { id: "a-resume", group: "Actions", label: "Download résumé (PDF)", hint: "Generated from this site, always current", glyph: "↓", run: async () => {
           flash("Pressing the PDF…");

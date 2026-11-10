@@ -1,6 +1,7 @@
 import { Ore } from "@/components/sections/Ore";
 import { SignalChain } from "@/components/sections/SignalChain";
 import { Discography } from "@/components/sections/Discography";
+import { ClientWork } from "@/components/sections/ClientWork";
 import { Rig } from "@/components/sections/Rig";
 import { Tour } from "@/components/sections/Tour";
 import { Soundcheck } from "@/components/sections/Soundcheck";
@@ -20,6 +21,7 @@ export default function Home() {
       <Strings />
       <SignalChain />
       <Discography />
+      <ClientWork />
       <Rig />
       <Tour />
       <Soundcheck />

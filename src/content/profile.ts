@@ -19,6 +19,8 @@ export const TRACKS = [
   { n: "09", id: "encore", name: "Encore", was: "Ship" },
 ] as const;
 
+export const CLIENT_TRACK = { n: "03", id: "client-work", name: "Discography · Side C" } as const;
+
 export type Role = {
   /** Shown while `dates` is unknown. */
   when: string;
@@ -56,7 +58,7 @@ export const PROFILE = {
 
   bio: "Currently at InfraDock AI, designing LLM-powered document-processing pipelines. Focused on the gap between models that demo well and systems that survive real traffic: schema-constrained extraction, async and batched pipelines, and observability. Publishes the tools he needed but couldn't find.",
   intro:
-    "AI Systems Engineer at InfraDock AI. I close the gap between models that demo well and systems that survive real traffic: schema-constrained extraction, async and batched pipelines, observability.",
+    "AI Systems Engineer at InfraDock AI, building reliable document pipelines. I also build freelance websites, booking and commerce systems, and the admin tools teams use to run them.",
 
   /** TODO(hitarth): the current site lists no email; the contact section needs one. */
   email: null as string | null,
