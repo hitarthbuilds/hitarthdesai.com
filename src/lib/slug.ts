@@ -1,4 +1,4 @@
-/** Heading → anchor id. Shared by the Markdown renderer and the Ask index so citations deep-link. */
+/** Heading text → anchor id. */
 export const slugify = (s: string) =>
   s
     .toLowerCase()

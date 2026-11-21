@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { SubHeader } from "@/components/SubHeader";
+import { Words } from "@/components/Words";
 import { PROFILE } from "@/content/profile";
 import { formatDate, getPost, getPosts } from "@/lib/posts";
 import { renderMarkdown } from "@/lib/markdown";
-import { PostChrome } from "./PostChrome";
+import "@/styles/case.css";
+import "@/styles/blog.css";
 
 export const dynamicParams = false;
 
@@ -13,15 +15,14 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params;
-  const post = getPost(slug);
+  const post = getPost((await params).slug);
   if (!post) return {};
   const m = post.meta;
   return {
-    title: { absolute: m.seoTitle ?? `${m.title} · ${PROFILE.name}` },
+    title: { absolute: m.seoTitle ?? `${m.title} — ${PROFILE.name}` },
     description: m.description,
     alternates: { canonical: `/blog/${m.slug}` },
-    openGraph: { type: "article", title: m.title, description: m.description, publishedTime: m.date, authors: [PROFILE.name], tags: m.tags },
+    openGraph: { type: "article", title: m.title, description: m.description, publishedTime: m.date, authors: [PROFILE.name], tags: m.tags, url: `/blog/${m.slug}` },
   };
 }
 
@@ -33,57 +34,67 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const { html, headings } = await renderMarkdown(post.body);
   const all = getPosts();
   const i = all.findIndex((p) => p.slug === slug);
+  const prev = all[(i - 1 + all.length) % all.length];
   const next = all[(i + 1) % all.length];
 
   return (
-    <article className="mx-auto max-w-[1440px] px-5 pb-24 pt-32 sm:px-8 lg:px-12">
-      <PostChrome headings={headings} />
-      <Link href="/blog" className="eyebrow inline-flex items-center gap-2 transition-colors hover:text-chrome">
-        ← Liner notes
-      </Link>
-      <header className="mt-8 max-w-5xl">
-        <p className="eyebrow flex flex-wrap gap-3">
-          <time dateTime={meta.date} className="text-forge">
-            {formatDate(meta.date)}
-          </time>
-          <span>{meta.readMinutes} min read</span>
-          <span>By {PROFILE.name}, {PROFILE.title}</span>
-        </p>
-        <h1 className="display mt-5 text-[clamp(2.4rem,5.6vw,5.4rem)] leading-[0.95] text-chrome">{meta.title}</h1>
-        {meta.excerpt && <p className="mt-6 max-w-3xl text-[19px] leading-relaxed text-chrome/75">{meta.excerpt}</p>}
-      </header>
-      <div className="mt-14 grid gap-14 lg:grid-cols-[minmax(0,1fr)_16rem]">
-        <div className="prose-liner" dangerouslySetInnerHTML={{ __html: html }} />
-        <aside className="hidden lg:block">
-          <nav aria-label="On this page" className="sticky top-28" data-toc>
-            <p className="eyebrow text-forge">Setlist</p>
-            <ol className="mt-4 space-y-2 border-l border-line text-[13px]">
-              {headings.map((h) => (
-                <li key={h.id} className={h.depth === 3 ? "pl-7" : "pl-4"}>
-                  <a href={`#${h.id}`} data-toc-link={h.id} className="-ml-px block border-l border-transparent pl-0 leading-snug text-mute transition-colors hover:text-chrome">
-                    {h.text}
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
-        </aside>
-      </div>
-      {meta.tags.length > 0 && (
-        <ul className="mt-14 flex flex-wrap gap-2">
-          {meta.tags.map((t) => (
-            <li key={t} className="rounded-full border border-line-2 px-3 py-1 font-mono text-[11px] text-mute">
-              {t}
-            </li>
-          ))}
-        </ul>
-      )}
-      <Link href={`/blog/${next.slug}`} className="group mt-20 block border-t border-line pt-10">
-        <span className="eyebrow">Next track</span>
-        <span className="mt-3 block max-w-4xl font-display text-[clamp(1.8rem,4vw,3.4rem)] font-bold leading-[1.02] tracking-[-0.03em] text-chrome/45 transition-colors group-hover:text-chrome">
-          {next.title} →
-        </span>
-      </Link>
+    <div className="case-body">
+      <SubHeader back={{ href: "/blog", label: "Field notes" }} />
+      <main id="main" className="blog-main">
+        <article>
+          <header className="post-head">
+            <p className="case-meta" data-reveal="up">
+              <time dateTime={meta.date}>{formatDate(meta.date)}</time>
+              <i aria-hidden="true">/</i>
+              {meta.readMinutes} min read
+              <i aria-hidden="true">/</i>
+              {PROFILE.name}
+            </p>
+            <h1 className="post-title" data-reveal="words">
+              <Words text={meta.title} />
+            </h1>
+            {meta.excerpt && (
+              <p className="post-excerpt" data-reveal="up" style={{ "--delay": "260ms" } as React.CSSProperties}>
+                {meta.excerpt}
+              </p>
+            )}
+          </header>
+          <div className="post-body">
+            {headings.length > 2 && (
+              <nav className="post-toc" aria-label="On this page">
+                <h2>On this page</h2>
+                <ol>
+                  {headings.map((h) => (
+                    <li key={h.id} className={h.depth === 3 ? "sub" : undefined}>
+                      <a href={`#${h.id}`}>{h.text}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )}
+            <div>
+              <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />
+              {meta.tags.length > 0 && (
+                <ul className="post-tags" aria-label="Topics">
+                  {meta.tags.map((t) => (
+                    <li key={t}>{t}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        </article>
+      </main>
+      <footer className="case-footer case-footer--posts">
+        <a className="case-foot-item" href={`/blog/${prev.slug}`} data-cursor="Read">
+          <span>← Newer note</span>
+          <strong>{prev.title}</strong>
+        </a>
+        <a className="case-foot-item case-foot-next" href={`/blog/${next.slug}`} data-cursor="Read">
+          <span>Older note →</span>
+          <strong>{next.title}</strong>
+        </a>
+      </footer>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -99,6 +110,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           }),
         }}
       />
-    </article>
+    </div>
   );
 }

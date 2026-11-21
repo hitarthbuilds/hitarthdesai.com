@@ -1,19 +1,15 @@
-import { ogCard, OG_SIZE } from "@/lib/og";
-import { formatDate, getPost, getPosts } from "@/lib/posts";
+import { getPost, getPosts } from "@/lib/posts";
+import { OG_SIZE, ogCard } from "@/lib/og";
 
 export const size = OG_SIZE;
 export const contentType = "image/png";
+export const alt = "Field note by Hitarth Desai";
 
 export function generateStaticParams() {
   return getPosts().map((p) => ({ slug: p.slug }));
 }
 
-export async function generateImageMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const post = getPost((await params).slug);
-  return [{ id: "card", alt: post?.meta.title ?? "Liner notes", size: OG_SIZE, contentType }];
-}
-
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
-  const post = getPost((await params).slug)!;
-  return ogCard({ eyebrow: `Liner notes · ${post.meta.readMinutes} min`, title: post.meta.title, footer: `Hitarth Desai · ${formatDate(post.meta.date)}` });
+  const post = getPost((await params).slug);
+  return ogCard({ kicker: "Field notes", title: post?.meta.title ?? "Field notes" });
 }

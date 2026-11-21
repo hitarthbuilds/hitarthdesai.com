@@ -75,8 +75,10 @@ export function getPost(slug: string) {
   return file ? read(file) : null;
 }
 
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** "2026-07-24" → "24 Jul 2026" (the date style used across the site). */
 export function formatDate(iso: string) {
   const [y, m, d] = iso.split("-").map(Number);
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  return y ? `${months[(m || 1) - 1]} ${d}, ${y}` : "";
+  return y ? `${String(d).padStart(2, "0")} ${MONTHS[(m || 1) - 1]} ${y}` : "";
 }

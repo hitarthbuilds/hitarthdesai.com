@@ -1,9 +1,9 @@
-import { ogCard, OG_SIZE } from "@/lib/og";
+import { OG_SIZE, ogCard } from "@/lib/og";
 
-export const alt = "Liner notes: field notes on making LLMs reliable in production, by Hitarth Desai";
 export const size = OG_SIZE;
 export const contentType = "image/png";
+export const alt = "Field notes by Hitarth Desai";
 
 export default function Image() {
-  return ogCard({ eyebrow: "Track 07 / Liner notes", title: "Field notes on making LLMs reliable in production" });
+  return ogCard({ kicker: "Writing", title: "Field notes." });
 }

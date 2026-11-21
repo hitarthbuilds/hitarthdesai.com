@@ -1,14 +1,15 @@
 // Server-only: renders a post's Markdown to HTML at build time, with Shiki-highlighted code
-// and stable heading ids for the table of contents.
+// and stable heading ids for the contents list.
 import { Marked, type Tokens } from "marked";
 import { createHighlighter, type Highlighter } from "shiki";
 import { slugify } from "./slug";
 
 export type Heading = { id: string; text: string; depth: 2 | 3 };
 
+const THEME = "min-dark";
 const LANGS = ["python", "typescript", "javascript", "json", "bash", "yaml", "sql", "toml"];
 let hl: Promise<Highlighter> | null = null;
-const highlighter = () => (hl ??= createHighlighter({ themes: ["vitesse-dark"], langs: LANGS }));
+const highlighter = () => (hl ??= createHighlighter({ themes: [THEME], langs: LANGS }));
 
 const escape = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
@@ -23,7 +24,7 @@ export async function renderMarkdown(src: string): Promise<{ html: string; headi
       if (token.type !== "code") return;
       const t = token as Tokens.Code;
       const lang = LANGS.includes(t.lang ?? "") ? t.lang! : "text";
-      const code = lang === "text" ? `<pre class="shiki"><code>${escape(t.text)}</code></pre>` : h.codeToHtml(t.text, { lang, theme: "vitesse-dark" });
+      const code = lang === "text" ? `<pre class="shiki"><code>${escape(t.text)}</code></pre>` : h.codeToHtml(t.text, { lang, theme: THEME });
       Object.assign(token, { type: "html", block: true, pre: false, text: `<div class="code-block" data-lang="${lang}">${code}</div>` });
     },
     renderer: {
@@ -40,12 +41,13 @@ export async function renderMarkdown(src: string): Promise<{ html: string; headi
         const text = this.parser.parseInline(tokens);
         const external = /^https?:\/\//.test(href) && !href.startsWith("https://hitarthdesai.com");
         const local = href.replace(/^https:\/\/hitarthdesai\.com/, "").replace(/\/$/, "") || "/";
-        return external
-          ? `<a href="${href}"${title ? ` title="${title}"` : ""} target="_blank" rel="noopener noreferrer">${text}</a>`
-          : `<a href="${local}"${title ? ` title="${title}"` : ""}>${text}</a>`;
+        const t = title ? ` title="${title}"` : "";
+        return external ? `<a href="${href}"${t} target="_blank" rel="noopener noreferrer">${text}</a>` : `<a href="${local}"${t}>${text}</a>`;
       },
     },
   });
-  const html = await marked.parse(src);
+  // The page renders the title itself, so drop the post's own leading H1.
+  const body = src.replace(/^\s*#\s+[^\n]+\n/, "");
+  const html = await marked.parse(body);
   return { html, headings };
 }

@@ -1,128 +1,19 @@
-/**
- * Single source of truth for every piece of copy and every link on the site.
- * Fields typed `string | null` are TODOs waiting on Hitarth's input: components must
- * hide them (or render a neutral "—") when they are null, never show placeholder text.
- */
-
-export type Social = { id: "github" | "huggingface" | "linkedin" | "x" | "pypi"; label: string; handle: string; href: string };
-
-/** The homepage is a record: each section is a track. `was` is the old site's section name. */
-export const TRACKS = [
-  { n: "01", id: "overture", name: "Overture", was: "Source" },
-  { n: "02", id: "signal-chain", name: "Signal Chain", was: "Extract" },
-  { n: "03", id: "discography", name: "Discography", was: "Structure" },
-  { n: "04", id: "rig", name: "The Rig", was: "Stack" },
-  { n: "05", id: "tour", name: "Tour History", was: "Trace" },
-  { n: "06", id: "soundcheck", name: "Soundcheck", was: "Query" },
-  { n: "07", id: "liner-notes", name: "Liner Notes", was: "Publish" },
-  { n: "08", id: "iron-and-strings", name: "Iron & Strings", was: "Signal" },
-  { n: "09", id: "encore", name: "Encore", was: "Ship" },
-] as const;
-
-export const CLIENT_TRACK = { n: "03", id: "client-work", name: "Discography · Side C" } as const;
-
-export type Role = {
-  /** Shown while `dates` is unknown. */
-  when: string;
-  title: string;
-  org: string;
-  summary: string;
-  current?: boolean;
-  /** TODO(hitarth): e.g. "2025 — now". Hidden while null. */
-  dates: string | null;
-};
-
+/** Name, links and short copy used across the site, metadata and structured data. */
 export const PROFILE = {
   name: "Hitarth Desai",
-  shortName: "Hitarth",
-  monogram: "HD",
   title: "AI Systems Engineer",
-  location: { city: "Surat", region: "Gujarat", country: "India", countryCode: "IN" },
   url: "https://hitarthdesai.com",
-
-  tagline: "I build the layer that makes LLMs reliable in production.",
-  /** Hero headline, split into display lines. `accent` renders in molten serif italic. */
-  headline: [
-    [{ text: "I build the layer" }],
-    [{ text: "that makes LLMs" }],
-    [{ text: "reliable", accent: true }, { text: " in" }],
-    [{ text: "production." }],
-  ] as { text: string; accent?: boolean }[][],
-  motto: "Played loud. Shipped reliable.",
-  guitar: "Schecter Demon-6",
-
-  status: {
-    open: true,
-    label: "Open to AI Systems & Founding Engineer roles at seed–Series A startups",
-  },
-
-  bio: "Currently at InfraDock AI, designing LLM-powered document-processing pipelines. Focused on the gap between models that demo well and systems that survive real traffic: schema-constrained extraction, async and batched pipelines, and observability. Publishes the tools he needed but couldn't find.",
-  intro:
-    "AI Systems Engineer at InfraDock AI, building reliable document pipelines. I also build freelance websites, booking and commerce systems, and the admin tools teams use to run them.",
-
-  /** TODO(hitarth): the current site lists no email; the contact section needs one. */
-  email: null as string | null,
-  /** TODO(hitarth): booking link (Cal.com / Calendly). Hidden while null. */
-  bookingUrl: null as string | null,
-
-  socials: [
-    { id: "github", label: "GitHub", handle: "hitarthbuilds", href: "https://github.com/hitarthbuilds" },
-    { id: "huggingface", label: "Hugging Face", handle: "hitarthbuilds", href: "https://huggingface.co/hitarthbuilds" },
-    { id: "linkedin", label: "LinkedIn", handle: "hitarth-desai10", href: "https://www.linkedin.com/in/hitarth-desai10" },
-    { id: "x", label: "X", handle: "@hitarthbuilds", href: "https://x.com/hitarthbuilds" },
-    { id: "pypi", label: "PyPI", handle: "hitarth_builds_10", href: "https://pypi.org/user/hitarth_builds_10/" },
-  ] satisfies Social[],
-
-  experience: [
-    {
-      when: "Now",
-      title: "AI Systems Engineer",
-      org: "InfraDock AI",
-      summary: "Designing LLM-powered document-processing pipelines: turning probabilistic model output into structured data downstream services can trust, fast and observable enough to run under real load.",
-      current: true,
-      dates: null,
-    },
-    {
-      when: "Previously",
-      title: "2× AI/ML Lead",
-      org: "GDSC Surat",
-      summary: "Taught and built with a few hundred student engineers over two terms.",
-      dates: null,
-    },
-    {
-      when: "Earlier",
-      title: "Backend & systems",
-      org: "Independent / contract",
-      summary: "Shipped production systems ranging from event-driven backtesting infrastructure to microservice platforms.",
-      dates: null,
-    },
-  ] satisfies Role[],
-
-  education: { degree: "B.E. Computer Engineering", school: "Gujarat Technological University", short: "GTU", year: "2026" },
-
-  stack: {
-    Languages: ["Python", "TypeScript", "Rust (learning)"],
-    "LLM & data": ["Structured outputs", "Constrained decoding", "msgspec", "LangChain", "vLLM"],
-    Infra: ["Docker", "Kubernetes", "Terraform", "Kafka", "Microservices"],
-    MLOps: ["Async pipelines", "Batching", "Eval harnesses", "Observability"],
-  } as Record<string, string[]>,
-
-  /** From the current site's "Off the clock" copy. */
-  offStage:
-    "International gold-medalist powerlifter. I play guitar and perform live, mostly metal and hard rock. The discipline of progressive overload turns out to map surprisingly well onto debugging distributed systems.",
-
-  achievements: [
-    "International gold-medal powerlifter",
-    "Two terms as AI/ML Lead at GDSC Surat",
-    "Open-source tools on PyPI and GitHub",
+  location: { city: "Surat", region: "Gujarat", country: "India", countryCode: "IN" },
+  description:
+    "Hitarth Desai builds production AI infrastructure, document intelligence and data systems. Explore engineering projects, client work, and field notes.",
+  linkedin: "https://www.linkedin.com/in/hitarth-desai10/",
+  github: "https://github.com/hitarthbuilds",
+  /** Every profile that should resolve to the same person in search (schema.org sameAs). */
+  sameAs: [
+    "https://github.com/hitarthbuilds",
+    "https://www.linkedin.com/in/hitarth-desai10",
+    "https://huggingface.co/hitarthbuilds",
+    "https://x.com/hitarthbuilds",
+    "https://pypi.org/user/hitarth_builds_10/",
   ],
-
-  /** TODO(hitarth): competition details. Each stat is hidden while null. */
-  powerlifting: {
-    meet: null as string | null,
-    year: null as string | null,
-    weightClass: null as string | null,
-    bestTotal: null as string | null,
-    yearsLifting: null as string | null,
-  },
 } as const;

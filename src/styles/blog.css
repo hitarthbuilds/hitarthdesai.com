@@ -1,0 +1,62 @@
+/* Field notes index and article pages. Shares the case-page header and footer. */
+.case-body .blog-main {margin:0 auto;max-width:1920px;padding:0 clamp(20px,5.4vw,116px)}
+.case-body .blog-intro {padding:clamp(52px,6.5vw,126px) 0 clamp(30px,3.5vw,60px);display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);align-items:end;gap:clamp(24px,5vw,90px)}
+.case-body .blog-intro h1 {font:700 clamp(68px,8.9vw,154px)/.88 var(--display);text-transform:uppercase;letter-spacing:-.043em}
+.case-body .blog-intro h1 .dot {color:#606060}
+.case-body .blog-intro p {font-size:clamp(17px,1.4vw,24px);line-height:1.45;color:#323232;max-width:38ch}
+.case-body .blog-list {list-style:none;margin:0 0 clamp(70px,8vw,140px);padding:0;border-top:1px solid #333}
+.case-body .blog-list li {border-bottom:1px solid #a4a4a4}
+.case-body .blog-row {display:grid;grid-template-columns:minmax(120px,.3fr) minmax(0,1.4fr) 40px;gap:clamp(16px,3vw,48px);align-items:baseline;padding:clamp(20px,2vw,32px) 0;text-decoration:none}
+.case-body .blog-row .note-meta {display:grid;gap:4px;color:#535353}
+.case-body .blog-row .note-meta span::before {content:none}
+.case-body .blog-row-title {display:block;font-size:clamp(22px,2.25vw,36px);line-height:1.11;letter-spacing:-.046em;font-weight:530;text-wrap:balance}
+.case-body .blog-row-excerpt {display:block;margin-top:10px;max-width:62ch;color:#4a4a4a;font-size:clamp(15px,1.05vw,18px);line-height:1.5}
+.case-body .blog-row-arrow {justify-self:end;font-size:clamp(25px,2.3vw,37px);font-weight:300;transition:transform .2s ease}
+.case-body .note-meta {font:500 clamp(10px,.8vw,13px)/1.4 var(--mono);letter-spacing:.035em;text-transform:uppercase}
+
+@media(hover:hover){.case-body .blog-row:hover .blog-row-title {text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.13em}.case-body .blog-row:hover .blog-row-arrow {transform:translateX(5px)}}
+.case-body .post-head {padding:clamp(52px,6.5vw,126px) 0 clamp(30px,3.5vw,60px);max-width:1200px}
+.case-body .post-head .case-meta {margin-bottom:clamp(18px,2vw,34px)}
+.case-body .post-title {font:700 clamp(40px,4.6vw,88px)/.92 var(--display);text-transform:uppercase;letter-spacing:-.045em;text-wrap:balance}
+.case-body .post-excerpt {margin-top:clamp(20px,2.2vw,40px);font-size:clamp(18px,1.5vw,26px);line-height:1.43;color:#323232;max-width:44ch}
+.case-body .post-body {display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,.34fr);gap:clamp(40px,6vw,120px);border-top:1px solid #333;padding:clamp(33px,4vw,70px) 0 clamp(62px,7vw,130px)}
+.case-body .post-toc {position:sticky;top:30px;align-self:start;order:2}
+.case-body .post-toc h2 {font:550 clamp(10px,.79vw,14px)/1.35 var(--mono);text-transform:uppercase;letter-spacing:.065em;color:#555;margin-bottom:12px}
+.case-body .post-toc ol {list-style:none;margin:0;padding:0;border-top:1px solid #b1b1b1}
+.case-body .post-toc li {border-bottom:1px solid #d0d0d0}
+.case-body .post-toc li.sub a {padding-left:14px}
+.case-body .post-toc a {display:block;padding:9px 0;font-size:14px;line-height:1.35;text-decoration:none;color:#3a3a3a}
+.case-body .post-toc a:hover {color:#000;text-decoration:underline}
+.case-body .prose {font-size:clamp(17px,1.2vw,20px);line-height:1.65;color:#262626;max-width:68ch;min-width:0}
+.case-body .prose > * + * {margin-top:1.1em}
+.case-body .prose h2 {font:700 clamp(34px,3.2vw,56px)/.95 var(--display);text-transform:uppercase;letter-spacing:-.035em;margin-top:1.8em;color:#101010;scroll-margin-top:30px}
+.case-body .prose h3 {font-size:1.15em;line-height:1.3;letter-spacing:-.02em;margin-top:1.6em;color:#101010;scroll-margin-top:30px}
+.case-body .prose h2 + *,.case-body .prose h3 + * {margin-top:.7em}
+.case-body .prose a {text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.16em}
+.case-body .prose a:hover {color:#555}
+.case-body .prose strong {color:#101010}
+.case-body .prose ul,.case-body .prose ol {padding-left:1.3em}
+.case-body .prose li + li {margin-top:.4em}
+.case-body .prose blockquote {margin-left:0;padding-left:1.1em;border-left:2px solid #101010;color:#3a3a3a}
+.case-body .prose img {border:1px solid #c5c5c5;background:#fff}
+.case-body .prose hr {border:0;border-top:1px solid #b1b1b1;margin:2.4em 0}
+.case-body .prose table {border-collapse:collapse;width:100%;font-size:.86em;display:block;overflow-x:auto}
+.case-body .prose th,.case-body .prose td {border-bottom:1px solid #b1b1b1;padding:.55em .8em .55em 0;text-align:left;vertical-align:top}
+.case-body .prose th {font:600 .78em/1.3 var(--mono);text-transform:uppercase;letter-spacing:.05em}
+.case-body .prose :not(pre) > code {font:.86em var(--mono);background:#e2e2e2;padding:.1em .35em}
+.case-body .prose .code-block {background:#1f1f1f;overflow:hidden}
+.case-body .prose .code-block pre {margin:0;padding:1.1em 1.25em;overflow-x:auto;font:14px/1.6 var(--mono);background:transparent!important}
+.case-body .prose .code-block pre.shiki:not([style]) {color:#e0e0e0}
+.case-body .post-tags {list-style:none;display:flex;flex-wrap:wrap;gap:7px;padding:0;margin:2.4em 0 0}
+.case-body .post-tags li {border:1px solid #b1b1b1;padding:6px 10px;font:500 12px/1.3 var(--sans)}
+
+@media(max-width:860px){
+.case-body .blog-intro {grid-template-columns:1fr;gap:20px;padding-top:52px}
+.case-body .blog-row {grid-template-columns:1fr;gap:10px}
+.case-body .blog-row-arrow {display:none}
+.case-body .post-body {grid-template-columns:1fr;gap:0}
+.case-body .post-toc {display:none}
+}
+
+@media(prefers-reduced-motion:reduce){.case-body .blog-row-arrow {transition:none}}
+.case-body .case-footer--posts .case-foot-item strong {font-size:clamp(22px,2.2vw,40px);line-height:.95;max-width:22ch}

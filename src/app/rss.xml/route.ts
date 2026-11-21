@@ -5,7 +5,7 @@ export const dynamic = "force-static";
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-/** RSS 2.0 feed of every post (the "Liner notes"). */
+/** RSS 2.0 feed of every post (the field notes). */
 export function GET() {
   const posts = getPosts();
   const items = posts
@@ -23,7 +23,7 @@ ${p.tags.map((t) => `      <category>${esc(t)}</category>`).join("\n")}
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Liner notes · ${esc(PROFILE.name)}</title>
+    <title>Field notes · ${esc(PROFILE.name)}</title>
     <link>${PROFILE.url}/blog</link>
     <description>Field notes on making LLMs reliable in production, by ${esc(PROFILE.name)}, ${esc(PROFILE.title)}.</description>
     <language>en</language>
