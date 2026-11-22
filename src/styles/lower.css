@@ -13,10 +13,16 @@
 .fn-all:hover{background:#101010;color:#efefef}
 .fn-all:hover i{transform:rotate(45deg)}
 .fn-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(24px,5vw,90px);align-items:start;max-width:1660px;margin:0 auto}
-.fn-picture{position:sticky;top:clamp(90px,12svh,130px);overflow:hidden;aspect-ratio:4/3.3;background:#cfcfcf}
+.fn-side{position:sticky;top:clamp(90px,12svh,130px)}
+.fn-picture{position:relative;overflow:hidden;aspect-ratio:4/3.3;background:#cfcfcf}
 .fn-picture .fn-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;clip-path:inset(0 0 100% 0);transform:scale(1.14);transition:clip-path .95s var(--ease-io),transform 1.6s var(--ease-out)}
 .fn-picture .fn-art.is-active{z-index:1;clip-path:inset(0);transform:scale(1)}
-.fn-picture-n{position:absolute;z-index:2;left:clamp(14px,1.6vw,26px);bottom:clamp(4px,.8vw,12px);font:700 clamp(5rem,10vw,11rem)/.8 var(--display);letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1.5px #fff;mix-blend-mode:difference;animation:fn-n .9s var(--ease-out) backwards}
+/* The count sits under the picture, never on it. */
+.fn-count{display:flex;align-items:baseline;gap:14px;margin:clamp(14px,1.6vw,22px) 0 0;overflow:hidden}
+.fn-picture-n{display:block;font:700 clamp(3.6rem,6vw,7rem)/.8 var(--display);letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1.5px #101010;animation:fn-n .9s var(--ease-out) backwards}
+.fn-count>span:last-child{font:400 .76rem/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:#666}
+.tw i{font-style:normal}
+.tw-w{white-space:nowrap}
 @keyframes fn-n{from{transform:translateY(105%)}}
 .fn-list{margin:0;padding:0;list-style:none;border-top:1px solid #a4a4a4}
 .fn-list li{border-bottom:1px solid #a4a4a4}
@@ -40,11 +46,26 @@
   .fn-head{grid-template-columns:1fr}
   .fn-all{justify-self:start}
   .fn-layout{grid-template-columns:1fr}
-  .fn-picture{position:relative;top:auto;aspect-ratio:16/10}
+  .fn-side{position:relative;top:auto}
+  .fn-picture{aspect-ratio:16/10}
   .fn-row{grid-template-columns:28px minmax(0,1fr) auto;gap:12px;padding:20px 6px}
   .fn-arrow{width:40px;font-size:1.1rem}
   .fn-name{font-size:clamp(22px,6.4vw,30px)}
 }
+
+/* Pinned reel: the pictures are a stack of prints; the top one slides off at the end of its note,
+   and the open note's excerpt types out character by character as you scroll. */
+.fn[data-pinned] .fn-reel{height:300svh}
+.fn[data-pinned] .fn-layout{position:sticky;top:0;height:100svh;align-items:center;padding:clamp(96px,12svh,130px) 0 clamp(30px,5svh,60px)}
+.fn[data-pinned] .fn-side{position:relative;top:auto}
+.fn[data-pinned] .fn-picture{overflow:visible;background:none;perspective:1400px}
+.fn[data-pinned] .fn-picture .fn-art{z-index:calc(10 - var(--k));clip-path:none;border:clamp(8px,.85vw,14px) solid #f7f7f7;box-shadow:0 34px 60px -34px #0008,0 2px 6px #0002;transition:none;
+  opacity:calc(1 - var(--off, 0) * 1.15);
+  transform:translate3d(calc(var(--off, 0) * -135% + var(--k) * 14px),calc(var(--off, 0) * -8% + var(--k) * 10px),calc(var(--off, 0) * 160px)) rotateY(calc(var(--off, 0) * 24deg)) rotateZ(calc(var(--k) * 2.4deg - 2deg - var(--off, 0) * 10deg)) scale(calc(1 - var(--k) * .035))}
+.fn[data-pinned] .fn-row{transition:color .45s ease,opacity .5s ease}
+.fn[data-pinned] .fn-row:not(.is-active){opacity:.42}
+.fn[data-pinned] .fn-row::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#101010;transform-origin:left;transform:scaleX(var(--type, 0))}
+.fn[data-pinned] .tw i{opacity:clamp(0, var(--type, 1) * (var(--n) + 2) - var(--c), 1)}
 
 /* ── After hours ───────────────────────────────────────────────── */
 .after-hours{--curve:clamp(26px,4vw,64px);--pad:clamp(20px,3.7vw,76px);position:relative;z-index:1;margin-top:calc(var(--curve) * -1);border-radius:var(--curve) var(--curve) 0 0;overflow:clip;background:#101010;color:#f2f2f2}

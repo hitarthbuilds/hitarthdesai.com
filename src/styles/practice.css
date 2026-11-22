@@ -6,6 +6,12 @@
 .pr-lede{max-width:34ch;margin:24px 0 0;color:#c1c1c1;line-height:1.55;font-size:1rem}
 .pr-art{position:relative;margin:clamp(28px,4svh,52px) 0 0;width:min(100%,460px);aspect-ratio:16/10;overflow:hidden;border-radius:14px;background:#151515;box-shadow:0 0 0 1px #ffffff12}
 .pr-art img{width:100%;height:100%;object-fit:cover;object-position:72% 55%;filter:grayscale(1) contrast(1.05);transform:scale(calc(1.2 - var(--pp, .5) * .2)) rotate(calc((var(--pp, .5) - .5) * -5deg))}
+/* The 3D maker mark replaces the still once WebGL has drawn its first frame. */
+.mono-gl{position:absolute;inset:0;opacity:0;transition:opacity .9s ease}
+.mono-gl canvas{display:block;width:100%;height:100%}
+.pr-art[data-gl] .mono-gl{opacity:1}
+.pr-art[data-gl]{aspect-ratio:1/1;background:radial-gradient(60% 55% at 50% 45%,#262626,#151515 70%);box-shadow:none}
+.pr-art[data-gl] img{opacity:0}
 .pr-rail,.pr-bar{display:none}
 .pr-rows{display:grid}
 .pr-row{display:grid;grid-template-columns:auto 1fr;column-gap:22px;padding:26px 0;border-top:1px solid #4a4a4a}
@@ -22,6 +28,8 @@
 @media (min-width:761px) and (min-height:560px){
   .scrub:not(.reveal-fallback) .practice{height:300svh;padding:0}
   .scrub:not(.reveal-fallback) .pr-stage{position:sticky;top:0;height:100svh;align-items:center;padding:clamp(90px,11svh,120px) 6% clamp(40px,6svh,70px)}
+  .scrub:not(.reveal-fallback) .pr-side{align-self:stretch;display:flex;flex-direction:column;min-height:0}
+  .scrub:not(.reveal-fallback) .pr-art[data-gl]{flex:1 1 auto;width:100%;min-height:0;margin-left:-4%;aspect-ratio:auto;background:none;border-radius:0}
   .scrub:not(.reveal-fallback) .pr-main{display:grid;grid-template-rows:auto auto auto;align-content:center;gap:18px}
   .scrub:not(.reveal-fallback) .pr-rail{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
   .pr-rail button{display:inline-flex;align-items:center;gap:10px;min-height:40px;padding:0 16px;border:1px solid #4d4d4d;border-radius:999px;background:transparent;color:#bdbdbd;font:700 .72rem/1 var(--sans);text-transform:uppercase;letter-spacing:.03em;cursor:pointer;

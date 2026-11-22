@@ -3,7 +3,6 @@
 import { Fragment, useEffect, useRef } from "react";
 import { Clock } from "./Clock";
 import { Words } from "./Words";
-import { DotPortrait } from "./DotPortrait";
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -17,6 +16,8 @@ const ROLES = ["AI Systems Engineer", "Metal guitarist", "Powerlifter", "AI Syst
 // How far, and with how much spin, each letter lifts away as the hero scrolls off.
 const LIFT = [0.75, 1.05, 0.85, 1.2, 0.7, 1.1, 0.9, 1, 0.8, 1.15, 0.72, 0.95, 1.05];
 const SPIN = [-6, 4, -3, 7, -5, 3, -8, 5, -4, 6, -7, 2, 4];
+// Share of the pinned scroll spent shrinking the portrait; the rest runs the pipeline on it.
+const SHRINK = 0.5;
 
 /**
  * The pinned introduction. Scroll contracts the portrait into a rounded inset; the story rises in
@@ -38,6 +39,7 @@ export function Hero() {
     const storyText = story.querySelector<HTMLElement>(".story-text")!;
     const storyEdges = [...storyText.querySelectorAll<HTMLElement>(".w, .story-text > p:not(.story-role), .story-steps")];
     const marquee = story.querySelector<HTMLElement>(".story-marquee")!;
+    const scan = stage.querySelector<HTMLElement>(".scan")!;
     const controls = [".hero-info", ".portrait-tool", ".hero-foot"].map((s) => stage.querySelector<HTMLElement>(s)!);
     const letters = [...stage.querySelectorAll<HTMLElement>(".hn .chi:not(.dot)")];
     const force = letters.map(() => 0);
@@ -63,7 +65,10 @@ export function Hero() {
       const h = pin.offsetHeight;
       const w = pin.clientWidth;
       const distance = Math.max(1, entrance.offsetHeight - h);
-      progress = clamp(-entrance.getBoundingClientRect().top / distance);
+      const run = clamp(-entrance.getBoundingClientRect().top / distance);
+      progress = clamp(run / SHRINK);
+      // After the shrink the card holds while the pipeline runs on it: q goes 0 → 1.
+      const q = clamp((run - SHRINK) / (1 - SHRINK));
       const t = smooth(progress);
       const mobile = mobileQuery.matches;
       const box = mobile ? { top: 12, right: 7, bottom: 51, left: 39 } : { top: 17, right: 9, bottom: 18, left: 58 };
@@ -81,7 +86,34 @@ export function Hero() {
       portrait.style.left = lerp(initialCenter, (box.left + 100 - box.right) / 2, t).toFixed(2) + "%";
       portrait.style.bottom = (box.bottom * t).toFixed(2) + "%";
       stage.style.setProperty("--t", t.toFixed(4));
-      story.style.setProperty("--p", progress.toFixed(4));
+      story.style.setProperty("--p", run.toFixed(4));
+      story.style.setProperty("--q", q.toFixed(4));
+      // The card turns in 3D as it travels, then keeps turning slowly through the hold, like a camera
+      // circling it.
+      const arc = Math.sin(Math.PI * t);
+      stage.style.setProperty("--cy", (-14 * arc - 6 * t + 12 * q).toFixed(2) + "deg");
+      stage.style.setProperty("--cx", (7 * arc + 2 * t - 4 * q).toFixed(2) + "deg");
+      // Extraction: a beam runs down the card and leaves the ink print behind it. Validation:
+      // brackets close on the face. Human review: a second pass wipes the print off again.
+      const ext = clamp((q - 0.04) / 0.36);
+      const val = smooth(clamp((q - 0.42) / 0.24));
+      const rev = clamp((q - 0.7) / 0.26);
+      const sweep = rev > 0 ? rev : ext;
+      scan.style.setProperty("--on", clamp(q / 0.05).toFixed(3));
+      scan.style.setProperty("--beam", (sweep * 100).toFixed(2) + "%");
+      scan.style.setProperty("--beam-o", Math.min(1, Math.sin(Math.PI * sweep) * 5).toFixed(3));
+      scan.style.setProperty("--v", val.toFixed(4));
+      const cardTop = (h * box.top) / 100;
+      const cardH = h - (h * box.bottom) / 100 - cardTop;
+      const figTop = portrait.offsetTop;
+      const figH = Math.max(1, portrait.offsetHeight);
+      const toFig = (y: number) => (((y - figTop) / figH) * 100).toFixed(2) + "%";
+      const scanning = ext > 0 && rev < 1 && !expandedInk;
+      ink.classList.toggle("scanning", scanning);
+      if (scanning) {
+        ink.style.setProperty("--sa", rev > 0 ? toFig(cardTop + rev * cardH) : "-1%");
+        ink.style.setProperty("--sb", toFig(cardTop + ext * cardH));
+      }
       // The story is only shown once the shrinking portrait has moved clear of it, so no line of it
       // is ever hidden under the picture; the marquee likewise waits for the card to lift off it.
       const pr = pin.getBoundingClientRect();
@@ -166,6 +198,8 @@ export function Hero() {
         portrait.removeAttribute("style");
         story.removeAttribute("style");
         marquee.removeAttribute("style");
+        scan.removeAttribute("style");
+        ink.classList.remove("scanning");
         story.classList.add("is-live");
         setInert(story, false);
         controls.forEach((el) => setInert(el, false));
@@ -337,7 +371,15 @@ export function Hero() {
               <source media="(max-width:700px)" srcSet="/media/hero-print-mobile.webp" />
               <img src="/media/hero-print.webp" width={1254} height={1254} alt="" decoding="async" />
             </picture>
-            <DotPortrait />
+          </div>
+          <div className="scan" aria-hidden="true">
+            <i className="scan-beam" />
+            <span className="scan-frame">
+              <b />
+              <b />
+              <b />
+              <b />
+            </span>
           </div>
           <div className="portrait-tool">
             <button type="button" className="print-button" aria-pressed="false">

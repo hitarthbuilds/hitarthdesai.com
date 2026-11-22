@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Monogram } from "./Monogram";
 import { Words } from "./Words";
 
 const ROWS = [
@@ -88,6 +89,7 @@ export function Practice() {
           </p>
           <figure className="pr-art" aria-hidden="true">
             <img src="/media/split/embossed-h.webp" alt="" width={1300} height={650} loading="lazy" decoding="async" />
+            <Monogram />
           </figure>
         </div>
         <div className="pr-main">

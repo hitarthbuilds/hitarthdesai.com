@@ -127,7 +127,8 @@
 @media (max-width:760px){.scrub:not(.reveal-fallback) .field-shot figcaption{font-size:9.5px;flex-wrap:wrap;gap:6px}}
 
 /* ── Paths: a split that leans toward the side you point at, and dives in on scroll ── */
-.pathways{display:flex}
+.pathways{display:block}
+.paths-stage{display:flex;gap:2px;background:#131313}
 .path-card{flex:1 1 0;min-width:0;transition:flex-grow .9s var(--ease-out)}
 @media (hover:hover) and (min-width:761px){.pathways:has(.path-card:hover) .path-card:not(:hover){flex-grow:.7}}
 .path-card img{transition:scale .9s var(--ease-out),filter .55s}
@@ -140,7 +141,27 @@
 .path-card:is(:hover,:focus-visible) .path-go{background:#f2f2f2;color:#111}
 .path-card:is(:hover,:focus-visible) .path-go span{animation:arrow-drop .9s var(--ease-out)}
 @keyframes arrow-drop{0%{transform:none}45%{transform:translateY(160%)}46%{transform:translateY(-160%)}100%{transform:none}}
-@media (max-width:700px),(max-aspect-ratio:4/5){.pathways{flex-direction:column}.path-meta{font-size:.66rem}}
+@media (max-width:700px),(max-aspect-ratio:4/5){.paths-stage{flex-direction:column}.path-meta{font-size:.66rem}}
+/* Pinned: each photo first shows only through its own giant lettering (a black sheet over
+   with white type, darken blend), then the camera dives through one stroke while the pair unfolds from a corner. */
+.path-mask{display:none}
+.pathways[data-pinned]{height:250svh}
+.pathways[data-pinned] .paths-stage{position:sticky;top:0;height:100svh;overflow:clip;perspective:1700px}
+.pathways[data-pinned] .path-card{min-height:0;container-type:inline-size}
+.pathways[data-pinned] .path-work{transform-origin:100% 50%;transform:rotateY(calc(var(--book, 0) * 22deg)) scale(calc(1 - var(--book, 0) * .1))}
+.pathways[data-pinned] .path-life{transform-origin:0 50%;transform:rotateY(calc(var(--book, 0) * -22deg)) scale(calc(1 - var(--book, 0) * .1))}
+.pathways[data-pinned] .path-mask{display:grid;place-items:center;position:absolute;inset:0;z-index:3;overflow:clip;background:#101010;mix-blend-mode:darken;pointer-events:none;opacity:var(--mo, 1)}
+.pathways[data-pinned] .path-card img{filter:grayscale(1) contrast(calc(1 - var(--mo, 0) * .12)) brightness(calc(.78 + var(--mo, 0) * .5));transition:scale .9s var(--ease-out)}
+.pathways[data-pinned] .path-card::before{opacity:var(--txt, 1)}
+.pm-word{position:relative;display:block;font:700 22cqi/.8 var(--display);text-transform:uppercase;letter-spacing:-.05em;color:#fff;text-align:center;white-space:nowrap;transform:scale(var(--ms, 1));will-change:transform}
+.pm-f{display:inline-block}
+.pathways[data-pinned] :is(.path-meta,.path-go,.path-text>span){opacity:var(--txt, 1);transition:none}
+.pathways[data-pinned] .path-text .wi{transform:translateY(calc((1 - var(--txt, 1)) * 115%))}
+@media (max-width:700px),(max-aspect-ratio:4/5){
+  .pathways[data-pinned] .path-work{transform-origin:50% 100%;transform:rotateX(calc(var(--book, 0) * -20deg)) scale(calc(1 - var(--book, 0) * .08))}
+  .pathways[data-pinned] .path-life{transform-origin:50% 0;transform:rotateX(calc(var(--book, 0) * 20deg)) scale(calc(1 - var(--book, 0) * .08))}
+  .pm-word{font-size:20cqi}
+}
 @supports (animation-timeline:view()){
   @media (prefers-reduced-motion:no-preference){
     .pathways{animation:paths-in linear both;animation-timeline:view();animation-range:entry 0% entry 100%}
@@ -164,12 +185,14 @@
 
 /* ── Story: the pipeline lights up as the portrait settles ─────── */
 .story-steps{display:grid;gap:0;max-width:30rem;margin:26px 0 4px;padding:0;list-style:none;counter-reset:none}
-.story-steps li{--lit:clamp(0, (var(--p, 1) - var(--at)) * 9, 1);display:grid;grid-template-columns:34px 1fr auto;align-items:baseline;gap:12px;padding:11px 0;border-top:1px solid color-mix(in srgb,#f2f2f2 calc(18% + var(--lit) * 30%),transparent);
+.story-steps li{--lit:clamp(0, (var(--q, 1) - var(--at)) * 14, 1);--run:clamp(0, (var(--q, 1) - var(--at)) / var(--len), 1);position:relative;display:grid;grid-template-columns:34px 1fr auto;align-items:baseline;gap:12px;padding:11px 0;border-top:1px solid #ffffff1f;
   opacity:calc(.28 + var(--lit) * .72);transform:translateX(calc((1 - var(--lit)) * 14px))}
+/* Each step's rule fills while its stage of the pipeline runs on the portrait. */
+.story-steps li::before{content:"";position:absolute;left:0;right:0;top:-1px;height:1px;background:#f2f2f2;transform-origin:left;transform:scaleX(var(--run))}
 .story-steps li:last-child{border-bottom:1px solid #ffffff2e}
-.story-steps li:nth-child(1){--at:.5}
-.story-steps li:nth-child(2){--at:.62}
-.story-steps li:nth-child(3){--at:.74}
+.story-steps li:nth-child(1){--at:.03;--len:.37}
+.story-steps li:nth-child(2){--at:.4;--len:.28}
+.story-steps li:nth-child(3){--at:.7;--len:.26}
 .story-steps span{font:400 .72rem/1 var(--mono);color:#9a9a9a}
 .story-steps b{font:700 clamp(1.2rem,1.6vw,1.6rem)/1 var(--display);text-transform:uppercase;letter-spacing:-.01em}
 .story-steps i{font:400 .72rem/1.2 var(--mono);font-style:normal;text-transform:uppercase;letter-spacing:.05em;color:#a8a8a8;text-align:right}
@@ -272,11 +295,24 @@
 }
 @keyframes role-roll{0%,26%{transform:translateY(0)}33%,59%{transform:translateY(-1.2em)}66%,92%{transform:translateY(-2.4em)}100%{transform:translateY(-3.6em)}}
 
-/* ── Dot portrait ──────────────────────────────────────────────── */
-/* The halftone canvas sits exactly over the photograph in the portrait's own slot. Once it is
-   running, the photograph and the ink-plate tool step aside; the photo stays for screen readers. */
-.dot-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity .8s ease}
-.has-dots .dot-canvas{opacity:1}
-.hero-stage.has-dots .portrait-figure .print-layer{opacity:0}
-.hero-stage.has-dots .portrait-figure .hero-photo{opacity:calc(max(var(--dots, 0), 0) * .92);filter:brightness(0) invert(.94);transition:filter 1.2s ease}
-.hero-stage.has-dots .portrait-tool{display:none}
+/* ── Story: the pipeline runs on the portrait card ─────────────── */
+/* The card turns in 3D around its own centre while it shrinks and holds. */
+.scrub .hero-stage{transform:perspective(1800px) rotateX(var(--cx, 0deg)) rotateY(var(--cy, 0deg));
+  transform-origin:calc(var(--cl, 0%) + (100% - var(--cl, 0%) - var(--cr, 0%)) / 2) calc(var(--ct, 0%) + (100% - var(--ct, 0%) - var(--cb, 0%)) / 2)}
+.scan{display:none}
+.scrub .scan{display:block;position:absolute;z-index:3;inset:var(--ct, 0%) var(--cr, 0%) var(--cb, 0%) var(--cl, 0%);pointer-events:none;opacity:var(--on, 0);mix-blend-mode:difference}
+.scan-beam{position:absolute;left:0;right:0;top:var(--beam, 0%);height:2px;margin-top:-1px;background:#fff;opacity:var(--beam-o, 0);box-shadow:0 0 14px 2px #ffffffb3}
+.scan-beam::before{content:"";position:absolute;left:0;right:0;bottom:2px;height:clamp(40px,9svh,110px);background:linear-gradient(to top,#ffffff40,transparent)}
+.scan-frame{position:absolute;inset:calc(5% + var(--v, 0) * 7%) calc(6% + var(--v, 0) * 23%) calc(6% + var(--v, 0) * 36%) calc(6% + var(--v, 0) * 23%);opacity:min(1, calc(var(--v, 0) * 4))}
+.scan-frame b{position:absolute;width:clamp(14px,1.8vw,26px);aspect-ratio:1;border:0 solid #fff}
+.scan-frame b:nth-child(1){left:0;top:0;border-width:2px 0 0 2px}
+.scan-frame b:nth-child(2){right:0;top:0;border-width:2px 2px 0 0}
+.scan-frame b:nth-child(3){left:0;bottom:0;border-width:0 0 2px 2px}
+.scan-frame b:nth-child(4){right:0;bottom:0;border-width:0 2px 2px 0}
+.print-layer.scanning{opacity:1;-webkit-mask-image:linear-gradient(to bottom,transparent var(--sa),#000 var(--sa),#000 var(--sb),transparent var(--sb));mask-image:linear-gradient(to bottom,transparent var(--sa),#000 var(--sa),#000 var(--sb),transparent var(--sb))}
+/* The heading flips up word by word, like a split-flap board. */
+@media (prefers-reduced-motion:no-preference){
+  .story h2 .w{perspective:700px}
+  .story h2 .wi{transform-origin:50% 100%}
+  .scrub .story:not(.is-live) h2 .wi{transform:translateY(30%) rotateX(-100deg)}
+}

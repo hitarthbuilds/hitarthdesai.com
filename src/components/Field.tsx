@@ -22,6 +22,7 @@ const ITEMS: Placed[] = [
 ];
 const DEPTH = 6280;
 const clamp = (v: number) => Math.min(1, Math.max(0, v));
+const smooth = (t: number) => t * t * (3 - 2 * t);
 
 /**
  * A fly-through: stills and two pull quotes sit at different depths, and scrolling moves the
@@ -86,21 +87,41 @@ export function Field() {
         }),
       );
       let passed = 0;
-      items.forEach((el, i) => {
+      // Work out every item's opacity and where it lands on screen (perspective 900px, centred).
+      const P = 900;
+      const placed = items.map((el, i) => {
         const it = ITEMS[i];
         const d = cam - it.z; // < 0: still ahead of the camera
         // Only the next two stops are visible, so distant stills never pile up in the centre.
         const far = clamp((d + reach) / ramp) * go;
         const nearStart = it.kind === "quote" ? -60 : small ? -260 : 80;
-        const near = i === items.length - 1 ? 1 : 1 - clamp((d - nearStart) / 380);
+        const near = i === items.length - 1 ? 1 : 1 - clamp((d - nearStart) / (it.kind === "quote" ? 240 : 380));
         const dim = it.kind === "quote" ? 1 : 1 - focus * 0.82;
-        const o = far * near * dim;
         if (d > nearStart) passed++;
+        const X = (it.x * vw * spread) / 100;
+        const Y = (it.y * lift * vh) / 100;
+        const k = d < P - 40 ? P / (P - d) : 0;
+        const cx = vw / 2 + X * k;
+        const cy = vh / 2 + Y * k;
+        const hw = (el.offsetWidth * k) / 2 + 24;
+        const hh = (el.offsetHeight * k) / 2 + 24;
+        return { el, it, d, X, Y, o: far * near * dim, box: { l: cx - hw, r: cx + hw, t: cy - hh, b: cy + hh } };
+      });
+      // A still never shares the screen with a quote it would cross: it dissolves while the quote shows.
+      const quotes = placed.filter((q) => q.it.kind === "quote" && q.o > 0.01);
+      placed.forEach((a) => {
+        if (a.it.kind === "quote") return;
+        for (const q of quotes) {
+          const hit = a.box.l < q.box.r && a.box.r > q.box.l && a.box.t < q.box.b && a.box.b > q.box.t;
+          if (hit) a.o *= 1 - smooth(clamp(q.o / 0.08));
+        }
+      });
+      placed.forEach(({ el, it, d, X, Y, o }, i) => {
         // A slight roll toward the side each still sits on, so the corridor reads as moving.
         const roll = it.kind === "quote" || i === items.length - 1 ? 0 : Math.sign(it.x) * clamp(-d / 1700) * -4;
         el.style.opacity = o.toFixed(3);
         el.style.visibility = o < 0.01 ? "hidden" : "visible";
-        el.style.transform = `translate(-50%,-50%) translate3d(${((it.x * vw * spread) / 100).toFixed(1)}px,${((it.y * lift * vh) / 100).toFixed(1)}px,${d.toFixed(1)}px) rotate(${roll.toFixed(2)}deg)`;
+        el.style.transform = `translate(-50%,-50%) translate3d(${X.toFixed(1)}px,${Y.toFixed(1)}px,${d.toFixed(1)}px) rotate(${roll.toFixed(2)}deg)`;
       });
       const n = Math.min(items.length, passed + 1);
       if (n !== last) {
