@@ -3,6 +3,7 @@ import { Intro } from "@/components/Intro";
 import { Hero } from "@/components/Hero";
 import { Manifesto } from "@/components/Manifesto";
 import { Showcase } from "@/components/Showcase";
+import { Practice } from "@/components/Practice";
 import { Field } from "@/components/Field";
 import { FieldNotes, type Note } from "@/components/FieldNotes";
 import { AfterHours } from "@/components/AfterHours";
@@ -15,21 +16,7 @@ import "@/styles/home.css";
 import "@/styles/lower.css";
 import "@/styles/stage.css";
 import "@/styles/showcase.css";
-
-const PRACTICE = [
-  {
-    title: "InfraDock AI",
-    body: "I build document-processing infrastructure: PDF ingestion, adapters, confidence scoring and review workflows. The hard part is making an extraction reliable enough for the system that consumes it.",
-  },
-  {
-    title: "Tools I reach for",
-    body: "Python, SQL and PostgreSQL for data services. FastAPI, Docker and async workers for production pipelines. Structured outputs, evaluation harnesses and observability keep failures visible.",
-  },
-  {
-    title: "Background",
-    body: "Based in Surat, Gujarat. B.E. in Computer Engineering, class of 2026, Gujarat Technological University. Previously a two-term AI/ML lead at GDSC Surat.",
-  },
-];
+import "@/styles/practice.css";
 
 const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as React.CSSProperties;
 
@@ -86,24 +73,7 @@ export default function Home() {
         <Manifesto />
         <Showcase />
 
-        <section id="practice" className="practice" aria-labelledby="practice-title">
-          <div className="practice-title">
-            <h2 id="practice-title" data-reveal="words">
-              <Words text="The practice" tail={<span className="dot">.</span>} />
-            </h2>
-            <p data-reveal="up" style={delay(200)}>
-              Production AI and data infrastructure, from ingestion through verification.
-            </p>
-          </div>
-          <div className="practice-rows">
-            {PRACTICE.map((row, i) => (
-              <details key={row.title} open={i === 0} data-reveal="up" style={delay(i * 110)}>
-                <summary>{row.title}</summary>
-                <p>{row.body}</p>
-              </details>
-            ))}
-          </div>
-        </section>
+        <Practice />
 
         <Field />
         <FieldNotes notes={notes} />

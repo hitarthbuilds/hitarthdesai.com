@@ -35,13 +35,14 @@ html.lenis,html.lenis body{height:auto}
   :is(a,button):hover>.roll>span+span,:is(a,button):focus-visible>.roll>span+span{transform:none}
 }
 
-/* Cross-document page transitions: a short fade, and the work cover morphs into the case art. */
+/* Cross-document page transitions: the page you leave sinks and darkens while the next one rises
+   over it as a sheet, the same motion the work sheets use on the homepage. */
 @view-transition{navigation:auto}
-::view-transition-old(root){animation:vt-out .35s var(--ease-io) both}
-::view-transition-new(root){animation:vt-in .55s var(--ease-out) .1s both}
-::view-transition-group(case-art){animation-duration:.7s;animation-timing-function:var(--ease-io)}
-@keyframes vt-out{to{opacity:0;transform:translateY(-14px)}}
-@keyframes vt-in{from{opacity:0;transform:translateY(22px)}}
+::view-transition-group(root){animation-duration:.85s}
+::view-transition-old(root){animation:vt-out .85s var(--ease-io) both}
+::view-transition-new(root){animation:vt-in .85s var(--ease-io) both}
+@keyframes vt-out{to{transform:translateY(-6%) scale(.97);filter:brightness(.35)}}
+@keyframes vt-in{from{clip-path:inset(100% 0 0 0 round 48px 48px 0 0)}to{clip-path:inset(0 0 0 0 round 0)}}
 
 @media (prefers-reduced-motion:reduce){
   @view-transition{navigation:none}

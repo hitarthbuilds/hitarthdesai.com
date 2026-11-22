@@ -14,5 +14,4 @@
 }
 @media(max-height:520px) and (min-aspect-ratio:4/5){.scrub .hero-pin{min-height:330px}.hero-info{top:23%}.hero-info h1{font-size:4.6rem;margin:9px 0 12px}.hero-role{font-size:.7rem}.hero-foot{bottom:2%}.featured-link{display:none}.story-text h2{font-size:3.4rem}.story-text p{font-size:.9rem}.menu-head{margin-bottom:5px}.menu-main nav a{font-size:9vh}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}.path-card:is(:hover,:focus-visible) img,.menu-main nav a:is(:hover,:focus-visible){transform:none}.brush-hint{display:none}}
-.practice{position:relative;isolation:isolate;overflow:hidden}
-.practice:before{content:"";position:absolute;z-index:-1;left:0;bottom:0;width:43%;height:72%;background:linear-gradient(to bottom,#1c1c1c 2%,transparent 48%),url("/media/split/embossed-h.webp") right bottom/cover;opacity:.27;pointer-events:none}
+.practice{position:relative;isolation:isolate;overflow:clip}
