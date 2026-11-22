@@ -1,5 +1,6 @@
 import { PROFILE } from "@/content/profile";
 import { Clock } from "./Clock";
+import { Pressure } from "./Pressure";
 import { Words } from "./Words";
 
 const PAGES = [
@@ -17,7 +18,10 @@ const ELSEWHERE = [
   { href: "https://pypi.org/user/hitarth_builds_10/", label: "PyPI" },
 ];
 
-/** Closing card: the big invitation, the LinkedIn arrow, page and profile links either side of the portrait rising from the foot. */
+/**
+ * Closing card: the big invitation, the LinkedIn button inside a turning ring of text, page and
+ * profile links either side of the portrait, the bottom bar, and the name set across the full width.
+ */
 export function Contact() {
   return (
     <footer className="finale" id="contact" aria-labelledby="contact-heading">
@@ -32,7 +36,17 @@ export function Contact() {
               For AI systems roles, freelance projects, or a conversation about something I’ve built.
             </p>
             <a className="contact-round" href={PROFILE.linkedin} aria-label="Message Hitarth Desai on LinkedIn" data-reveal="up" data-cursor="Say hi">
-              <span aria-hidden="true">↗</span>
+              <svg className="contact-ring" viewBox="0 0 100 100" aria-hidden="true">
+                <path id="contact-ring-path" d="M50 50m-39 0a39 39 0 1 1 78 0a39 39 0 1 1-78 0" fill="none" />
+                <text>
+                  <textPath href="#contact-ring-path" textLength="244" lengthAdjust="spacing">
+                    Message on LinkedIn · Say hi ·
+                  </textPath>
+                </text>
+              </svg>
+              <span className="contact-arrow" aria-hidden="true">
+                ↗
+              </span>
             </a>
           </div>
         </div>
@@ -70,6 +84,7 @@ export function Contact() {
           </span>
           <a href="#home">Back to top ↑</a>
         </div>
+        <Pressure text="Hitarth Desai" className="finale-name" />
       </div>
     </footer>
   );

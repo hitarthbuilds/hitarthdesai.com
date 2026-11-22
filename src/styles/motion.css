@@ -73,3 +73,11 @@ body.menu-open .cursor{opacity:0}
 @media print{.grain,.cursor{display:none}}
 [data-magnetic]{transition:translate .7s var(--ease-out)}
 [data-magnetic].is-magnet{transition-duration:.18s}
+
+/* Pressure type: letters near a fine pointer lift and open into outlines (pz--fill does the reverse). */
+.pz-c{display:inline-block;transition:transform .6s var(--ease-out),-webkit-text-fill-color .35s ease}
+.pz--fill .pz-c{-webkit-text-stroke:1.5px currentColor;-webkit-text-fill-color:transparent}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .pz-c{-webkit-text-stroke:calc(min(var(--f, 0) * 4, 1) * 1.5px) currentColor;-webkit-text-fill-color:color-mix(in srgb,currentColor calc((1 - var(--f, 0)) * 100%),transparent);transform:translateY(calc(var(--f, 0) * -.06em))}
+  .pz--fill .pz-c{-webkit-text-stroke:1.5px currentColor;-webkit-text-fill-color:color-mix(in srgb,currentColor calc(var(--f, 0) * 100%),transparent)}
+}

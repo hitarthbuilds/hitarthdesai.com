@@ -1,6 +1,6 @@
 /* Case studies: a giant title, the project's picture opened up by scrolling, numbered notes and a
    full-width door to the next project. Every element has its own slot; nothing sits over the art. */
-.case-body{--pad:clamp(20px,5.4vw,116px);margin:0;background:#efefef;color:#111;font-family:var(--sans,Arial,sans-serif);font-weight:400}
+.case-body{--pad:clamp(20px,5.4vw,116px);min-height:100svh;margin:0;background:#efefef;color:#111;font-family:var(--sans,Arial,sans-serif);font-weight:400}
 .case-body *,.case-body *::before,.case-body *::after{box-sizing:border-box}
 .case-body a{color:inherit;text-decoration:none}
 .case-body a:focus-visible{outline:3px solid currentColor;outline-offset:5px}

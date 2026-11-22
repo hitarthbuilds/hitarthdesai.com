@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 /**
  * A short curtain on the first visit of a session: the HD mark and a counter while the portrait
- * decodes, then the panel lifts and the hero type rises. Skipped for reduced motion and repeat visits.
+ * decodes, then the curtain lifts away as six staggered strips and the hero type rises. Skipped for reduced motion and repeat visits.
  */
 export function Intro() {
   const [count, setCount] = useState(0);
@@ -46,7 +46,7 @@ export function Intro() {
       panel.current?.classList.add("intro-out");
       root.classList.add("intro-done");
       window.__lenis?.start();
-      setTimeout(() => setGone(true), 900);
+      setTimeout(() => setGone(true), 1400);
     };
     raf = requestAnimationFrame(step);
     // Never hold the page for more than about three seconds.
@@ -62,6 +62,11 @@ export function Intro() {
   if (gone) return null;
   return (
     <div className="intro" ref={panel} aria-hidden="true">
+      <div className="intro-strips">
+        {Array.from({ length: 6 }, (_, i) => (
+          <i key={i} style={{ "--i": i } as React.CSSProperties} />
+        ))}
+      </div>
       <div className="intro-inner">
         <img className="intro-mark" src="/media/maker-mark.svg" width={64} height={64} alt="" />
         <p className="intro-name">

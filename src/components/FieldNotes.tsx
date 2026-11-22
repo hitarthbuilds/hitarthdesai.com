@@ -39,7 +39,7 @@ export function FieldNotes({ notes }: { notes: Note[] }) {
             {pad(active + 1)}
           </span>
         </div>
-        <ol className="fn-list">
+        <ol className="fn-list" data-skew="">
           {notes.map((n, i) => (
             <li key={n.slug} data-reveal="up" style={{ "--delay": `${i * 110}ms` } as React.CSSProperties}>
               <a

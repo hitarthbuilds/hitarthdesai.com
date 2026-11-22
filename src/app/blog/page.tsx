@@ -23,7 +23,7 @@ export default function BlogIndex() {
           </h1>
           <p data-reveal="up" style={{ "--delay": "200ms" } as React.CSSProperties}>Making LLMs reliable in production: structured outputs, pipeline infrastructure, and the unglamorous layer in between.</p>
         </section>
-        <ol className="blog-list">
+        <ol className="blog-list" data-skew="">
           {posts.map((p, i) => (
             <li key={p.slug} data-reveal="up" style={{ "--delay": `${Math.min(i, 6) * 70}ms` } as React.CSSProperties}>
               <a className="blog-row" href={`/blog/${p.slug}`} data-cursor="Read">

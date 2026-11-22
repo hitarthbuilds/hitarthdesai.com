@@ -83,6 +83,10 @@ export function Showcase() {
         c.style.setProperty("--l", l.toFixed(4));
         const active = i === 0 ? p > 0.66 && l < 0.5 : e > 0.45 && l < 0.5;
         c.classList.toggle("is-active", active);
+        if (!active && tilt[i].tg) {
+          Object.assign(tilt[i], { tx: 0, ty: 0, tg: 0 });
+          kick();
+        }
       });
     };
     const request = () => {
@@ -95,6 +99,59 @@ export function Showcase() {
       measure();
       request();
     };
+    // Under a fine pointer the framed site tips toward it in 3D and a soft light follows across the
+    // glass. The tilt eases in and out, and stays flat while a panel is still rising or diving.
+    const fine = matchMedia("(hover:hover) and (pointer:fine)");
+    const frames = cards.map((c) => c.querySelector<HTMLElement>(".sc-frame")!);
+    const tilt = frames.map(() => ({ x: 0, y: 0, g: 0, tx: 0, ty: 0, tg: 0 }));
+    let tiltFrame = 0;
+    const tiltTick = () => {
+      let moving = false;
+      tilt.forEach((t, i) => {
+        t.x += (t.tx - t.x) * 0.1;
+        t.y += (t.ty - t.y) * 0.1;
+        t.g += (t.tg - t.g) * 0.1;
+        if (Math.abs(t.tx - t.x) + Math.abs(t.ty - t.y) + Math.abs(t.tg - t.g) > 0.004) moving = true;
+        else Object.assign(t, { x: t.tx, y: t.ty, g: t.tg });
+        const f = frames[i].style;
+        f.setProperty("--rx", `${t.x.toFixed(3)}deg`);
+        f.setProperty("--ry", `${t.y.toFixed(3)}deg`);
+        f.setProperty("--glare", t.g.toFixed(3));
+      });
+      tiltFrame = moving ? requestAnimationFrame(tiltTick) : 0;
+    };
+    const kick = () => {
+      if (!tiltFrame) tiltFrame = requestAnimationFrame(tiltTick);
+    };
+    const offs = frames.map((frame, i) => {
+      const onMove = (e: PointerEvent) => {
+        const t = tilt[i];
+        if (!fine.matches || reduced.matches || e.pointerType !== "mouse" || !cards[i].classList.contains("is-active")) {
+          t.tx = t.ty = t.tg = 0;
+          return kick();
+        }
+        const r = frame.getBoundingClientRect();
+        const nx = clamp((e.clientX - r.left) / r.width);
+        const ny = clamp((e.clientY - r.top) / r.height);
+        t.tx = (0.5 - ny) * 7;
+        t.ty = (nx - 0.5) * 9;
+        t.tg = 1;
+        frame.style.setProperty("--mx", `${(nx * 100).toFixed(1)}%`);
+        frame.style.setProperty("--my", `${(ny * 100).toFixed(1)}%`);
+        kick();
+      };
+      const onLeave = () => {
+        Object.assign(tilt[i], { tx: 0, ty: 0, tg: 0 });
+        kick();
+      };
+      frame.addEventListener("pointermove", onMove, { passive: true });
+      frame.addEventListener("pointerleave", onLeave);
+      return () => {
+        frame.removeEventListener("pointermove", onMove);
+        frame.removeEventListener("pointerleave", onLeave);
+      };
+    });
+
     measure();
     update();
     document.fonts?.ready.then(onResize);
@@ -102,6 +159,8 @@ export function Showcase() {
     addEventListener("resize", onResize, { passive: true });
     reduced.addEventListener("change", request);
     return () => {
+      cancelAnimationFrame(tiltFrame);
+      offs.forEach((off) => off());
       removeEventListener("scroll", request);
       removeEventListener("resize", onResize);
       reduced.removeEventListener("change", request);
@@ -262,7 +321,7 @@ function ProjectIndex() {
         </div>
       </div>
       <div className="sc-list" ref={list} onPointerLeave={() => setHover(null)}>
-        <ul className="sc-rows">
+        <ul className="sc-rows" data-skew="">
         {shown.map((p, i) => (
           <li key={`${category}-${p.slug}`} style={{ "--i": i } as React.CSSProperties}>
             <a className="sc-row" href={`/projects/${p.slug}`} onPointerEnter={() => setHover(p.slug)} onFocus={() => setHover(p.slug)} onBlur={() => setHover(null)}>

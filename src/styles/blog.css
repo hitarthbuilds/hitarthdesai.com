@@ -6,7 +6,10 @@
 .case-body .blog-intro p {font-size:clamp(17px,1.4vw,24px);line-height:1.45;color:#323232;max-width:38ch}
 .case-body .blog-list {list-style:none;margin:0 0 clamp(70px,8vw,140px);padding:0;border-top:1px solid #333}
 .case-body .blog-list li {border-bottom:1px solid #a4a4a4}
-.case-body .blog-row {display:grid;grid-template-columns:minmax(120px,.3fr) minmax(0,1.4fr) 40px;gap:clamp(16px,3vw,48px);align-items:baseline;padding:clamp(20px,2vw,32px) 0;text-decoration:none}
+.case-body .blog-row {position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:minmax(120px,.3fr) minmax(0,1.4fr) 40px;gap:clamp(16px,3vw,48px);align-items:baseline;padding:clamp(20px,2vw,32px) clamp(10px,1vw,18px);text-decoration:none;transition:color .4s ease}
+/* Ink rises from the foot of the row on hover; the copy turns to paper and the arrow tips up. */
+.case-body .blog-row::before {content:"";position:absolute;inset:0;z-index:-1;background:#111;transform:scaleY(0);transform-origin:50% 100%;transition:transform .55s var(--ease-io)}
+.case-body .blog-row-title,.case-body .blog-row .note-meta,.case-body .blog-row-excerpt {transition:color .4s ease,transform .6s var(--ease-out)}
 .case-body .blog-row .note-meta {display:grid;gap:4px;color:#535353}
 .case-body .blog-row .note-meta span::before {content:none}
 .case-body .blog-row-title {display:block;font-size:clamp(22px,2.25vw,36px);line-height:1.11;letter-spacing:-.046em;font-weight:530;text-wrap:balance}
@@ -14,7 +17,13 @@
 .case-body .blog-row-arrow {justify-self:end;font-size:clamp(25px,2.3vw,37px);font-weight:300;transition:transform .2s ease}
 .case-body .note-meta {font:500 clamp(10px,.8vw,13px)/1.4 var(--mono);letter-spacing:.035em;text-transform:uppercase}
 
-@media(hover:hover){.case-body .blog-row:hover .blog-row-title {text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.13em}.case-body .blog-row:hover .blog-row-arrow {transform:translateX(5px)}}
+.case-body .blog-row:is(:hover,:focus-visible) {color:#efefef}
+.case-body .blog-row:is(:hover,:focus-visible)::before {transform:scaleY(1)}
+.case-body .blog-row:is(:hover,:focus-visible) .note-meta {color:#9a9a9a}
+.case-body .blog-row:is(:hover,:focus-visible) .blog-row-excerpt {color:#c4c4c4}
+.case-body .blog-row:is(:hover,:focus-visible) .blog-row-title {transform:translateX(14px)}
+.case-body .blog-row:is(:hover,:focus-visible) .blog-row-arrow {transform:rotate(-45deg)}
+.case-body .blog-row-arrow {transition:transform .5s var(--ease-out)}
 .case-body .post-head {padding:clamp(52px,6.5vw,126px) 0 clamp(30px,3.5vw,60px);max-width:1200px}
 .case-body .post-head .case-meta {margin-bottom:clamp(18px,2vw,34px)}
 .case-body .post-title {font:700 clamp(40px,4.6vw,88px)/.92 var(--display);text-transform:uppercase;letter-spacing:-.045em;text-wrap:balance}
@@ -60,3 +69,9 @@
 
 @media(prefers-reduced-motion:reduce){.case-body .blog-row-arrow {transition:none}}
 .case-body .case-footer--posts .case-foot-item strong {font-size:clamp(22px,2.2vw,40px);line-height:.95;max-width:22ch}
+
+/* Not found: an outlined 404 that fills under the pointer, over the line that says where to go. */
+.case-body .nf {padding:clamp(40px,5vw,90px) 0 clamp(70px,8vw,140px)}
+.case-body .nf-code {margin:0;padding-bottom:clamp(16px,2.2vw,34px);font:700 min(34vw,52svh)/.8 var(--display);letter-spacing:-.06em;color:#111}
+.case-body .nf .blog-intro {padding-top:clamp(26px,3vw,54px);border-top:1px solid #333}
+.case-body .nf .blog-intro a {text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.16em}
