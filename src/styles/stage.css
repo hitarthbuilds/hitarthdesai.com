@@ -84,7 +84,7 @@
 .mf-foot img{width:34px;height:34px;filter:invert(.75)}
 @media (prefers-reduced-motion:reduce){.mf-word{color:#f2f2f2}}
 
-/* ── Field: a fly-through of stills and quotes ────────────────── */
+/* ── Field: a reel of stills and quotes ───────────────────────── */
 .field{--m:0;--fg:#e4e4e4;--bg:#151515;position:relative;background:color-mix(in srgb,#efefef calc(var(--m) * 100%),#171717);color:var(--fg);transition:color .45s ease}
 .field.is-light{--fg:#151515;--bg:#efefef}
 .field-stage{position:relative;padding:clamp(70px,9vw,140px) clamp(20px,5vw,90px)}
@@ -107,13 +107,32 @@
 .field-hud{display:none}
 @media (max-width:760px){.field-space{grid-template-columns:1fr 1fr}.field-quote{grid-column:1/-1}}
 
-/* The tunnel itself (motion allowed and scripts running). */
-.scrub:not(.reveal-fallback) .field{height:640svh;overflow:clip;background:#171717}
-.scrub:not(.reveal-fallback) .field-stage::before{content:"";position:absolute;inset:0;background:#efefef;clip-path:circle(calc(var(--m, 0) * 76%) at 50% 52%);pointer-events:none}
-.scrub:not(.reveal-fallback) .field-stage{position:sticky;top:0;height:100svh;padding:0;overflow:hidden;perspective:900px;perspective-origin:50% 50%}
-.scrub:not(.reveal-fallback) .field-space{position:absolute;inset:0;display:block;transform-style:preserve-3d}
-.scrub:not(.reveal-fallback) .field-item{position:absolute;left:50%;top:50%;will-change:transform,opacity;backface-visibility:hidden}
-.scrub:not(.reveal-fallback) .field-quote p{font-size:clamp(20px,2.3vw,40px)}
+/* The reel (motion allowed and scripts running): each still and quote is a frame of film on a ring
+   around the camera. Field.tsx sets the ring transform, each frame's width and its angle (--d, --a). */
+.scrub:not(.reveal-fallback) .field{height:600svh;overflow:clip;background:#171717}
+.scrub:not(.reveal-fallback) .field-stage::before{content:"";position:absolute;inset:0;background:#efefef;clip-path:circle(calc(var(--m, 0) * 76%) at 50% 50%);pointer-events:none}
+.scrub:not(.reveal-fallback) .field-stage{position:sticky;top:0;height:100svh;padding:0;overflow:hidden;perspective-origin:50% 50%}
+.scrub:not(.reveal-fallback) .field-space{position:absolute;inset:0;display:block;transform-style:preserve-3d;will-change:transform}
+.scrub:not(.reveal-fallback) .field-item{--band:clamp(30px,3.2vw,44px);position:absolute;left:50%;top:50%;padding:calc(var(--band) - 12px) 0 var(--band);background:#0b0b0b;color:#e4e4e4;
+  backface-visibility:hidden;will-change:transform,opacity;filter:brightness(calc(1 - var(--a, 0) * .62));box-shadow:0 0 0 1px #ffffff10}
+/* Sprocket holes run along both edges of every frame. */
+.scrub:not(.reveal-fallback) .field-item::before,.scrub:not(.reveal-fallback) .field-item::after{content:"";position:absolute;left:0;right:0;height:clamp(7px,.75vw,11px);
+  background:radial-gradient(closest-side,#ffffff38 70%,transparent 84%) 0 0/clamp(15px,1.5vw,22px) 100% repeat-x;pointer-events:none}
+.scrub:not(.reveal-fallback) .field-item::before{top:clamp(5px,.55vw,8px)}
+.scrub:not(.reveal-fallback) .field-item::after{bottom:clamp(5px,.55vw,8px)}
+/* The caption is printed on the film edge, between the picture and the holes. */
+.scrub:not(.reveal-fallback) .field-item figcaption{position:absolute;left:clamp(10px,1vw,16px);right:clamp(10px,1vw,16px);bottom:calc(var(--band) * .42);display:flex;align-items:center;gap:10px;margin:0;
+  font:500 clamp(8.5px,.7vw,10.5px)/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:#bdbdbd;opacity:1;white-space:nowrap;overflow:hidden}
+.scrub:not(.reveal-fallback) .field-shot figcaption b{padding:0;background:none;color:#7d7d7d}
+.scrub:not(.reveal-fallback) .field-shot figcaption b::before{content:"·";margin-right:10px;color:#5a5a5a}
+.scrub:not(.reveal-fallback) .field-frame{background:#1d1d1d}
+.scrub:not(.reveal-fallback) .field-frame img{transform:translateX(calc(var(--d, 0) * 9%)) scale(1.24)}
+/* Quotes are intertitle cards: the same frame, with the words set inside a ruled box. */
+.scrub:not(.reveal-fallback) .field-quote blockquote{aspect-ratio:3/2;display:grid;place-content:center;margin:0 clamp(8px,.9vw,14px);padding:clamp(16px,3vw,52px);border:1px solid #ffffff2e;text-align:center}
+.scrub:not(.reveal-fallback) .field-quote p{font-size:clamp(16px,1.85vw,32px);line-height:1.22;color:#e4e4e4}
+.scrub:not(.reveal-fallback) .field-quote mark{color:#141414;background:#e4e4e4}
+.scrub:not(.reveal-fallback) .field-quote figcaption{justify-content:center;opacity:1}
+.scrub:not(.reveal-fallback) .field-quote figcaption img{display:none}
 .scrub:not(.reveal-fallback) .field-intro{position:absolute;inset:0;z-index:1;display:grid;place-content:center;justify-items:center;margin:0;text-align:center;pointer-events:none;
   opacity:calc(1 - clamp(0, var(--fp, 0) * 24, 1));transform:scale(calc(1 + var(--fp, 0) * 9))}
 .scrub:not(.reveal-fallback) .field-title{font-size:clamp(4.4rem,13vw,15rem)}
@@ -121,10 +140,16 @@
   font:400 .72rem/1 var(--mono);text-transform:uppercase;letter-spacing:.09em;color:#e4e4e4;mix-blend-mode:difference}
 .scrub:not(.reveal-fallback) .field-hud{opacity:calc(1 - clamp(0, (var(--fp, 0) - .955) * 30, 1))}
 .scrub:not(.reveal-fallback) .field-bar{background:#e4e4e440}.scrub:not(.reveal-fallback) .field-bar i{background:#e4e4e4}
+.field-cap{display:none}
+.scrub:not(.reveal-fallback) .field-cap{display:block;min-width:0;max-width:34vw;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+@media (max-width:760px){
+  .scrub:not(.reveal-fallback) .field-hud>span:last-child{display:none}
+  .scrub:not(.reveal-fallback) .field-cap{max-width:none;flex:1}
+  .scrub:not(.reveal-fallback) .field-bar{display:none}
+}
 .field-count b{font-weight:400}
 .field-bar{flex:1;height:1px;background:color-mix(in srgb,var(--fg) 25%,transparent);overflow:hidden}
 .field-bar i{display:block;height:100%;background:var(--fg);transform-origin:left;transform:scaleX(var(--fp, 0))}
-@media (max-width:760px){.scrub:not(.reveal-fallback) .field-shot figcaption{font-size:9.5px;flex-wrap:wrap;gap:6px}}
 
 /* ── Paths: a split that leans toward the side you point at, and dives in on scroll ── */
 .pathways{display:block}
