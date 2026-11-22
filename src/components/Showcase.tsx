@@ -117,6 +117,7 @@ export function Showcase() {
         <Fragment key={p.slug}>
           <Panel index={i} total={LIVE.length} project={p} url={url} host={host} dive={i === 0} />
           {i === 0 && <div className="sc-dwell" aria-hidden="true" />}
+          {i > 0 && i < LIVE.length - 1 && <div className="sc-hold" aria-hidden="true" />}
         </Fragment>
       ))}
       <div className="sc-tail" aria-hidden="true" />
@@ -164,7 +165,11 @@ function Panel({ index, total, project: p, url, host, dive }: { index: number; t
           <p className="sc-kind">
             <b>Selected work</b> {p.category} <i>—</i> {p.field}
           </p>
-          <h3 id={`sc-${p.slug}`} className={`sc-name${p.name.length > 12 ? " sc-name--long" : ""}`}>
+          <h3
+            id={`sc-${p.slug}`}
+            className={`sc-name${p.name.length > 12 ? " sc-name--long" : ""}`}
+            style={{ "--len": Math.max(...p.name.split(" ").map((w) => w.length)) } as React.CSSProperties}
+          >
             <Words text={p.name} />
           </h3>
           <div className="sc-detail">

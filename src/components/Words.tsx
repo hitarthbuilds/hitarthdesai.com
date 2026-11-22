@@ -13,7 +13,12 @@ export function Words({ text, tail, start = 0 }: { text: string; tail?: ReactNod
         const words = line.split(" ").filter(Boolean);
         return (
           <Fragment key={li}>
-            {li > 0 && <br />}
+            {li > 0 && (
+              <>
+                {" "}
+                <br />
+              </>
+            )}
             {words.map((w, wi) => {
               const last = li === lines.length - 1 && wi === words.length - 1;
               return (

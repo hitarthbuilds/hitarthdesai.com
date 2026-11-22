@@ -1,9 +1,11 @@
 /* Selected work: the lettering dive, stacked full-bleed sites and the project index. */
 .showcase{position:relative;isolation:isolate;background:#111;color:#f2f2f2;scroll-margin-top:0}
-.sc-card{--e:1;--l:0;--gx:clamp(20px,3.7vw,76px);--fw:min(56vw,calc((100svh - 250px) * 1.6));position:sticky;top:0;height:100svh;min-height:560px}
-.sc-dwell,.sc-tail,.sc-hint,.sc-mask{display:none}
+.sc-card{--e:1;--l:0;--col:calc(100vw - var(--fw) - var(--gx) * 2 - clamp(28px,4vw,72px));--gx:clamp(20px,3.7vw,76px);--fw:min(56vw,calc((100svh - 250px) * 1.6));position:sticky;top:0;height:100svh;min-height:560px}
+.sc-dwell,.sc-tail,.sc-hold,.sc-hint,.sc-mask{display:none}
 .scrub:not(.reveal-fallback) .sc-dwell{display:block;height:190svh}
 .scrub:not(.reveal-fallback) .sc-tail{display:block;height:45svh}
+/* Each site holds in place, copy and buttons usable, before the next one starts to rise. */
+.scrub:not(.reveal-fallback) .sc-hold{display:block;height:55svh}
 
 /* Each site is a sheet: it rises with rounded shoulders over the one before, which sinks and darkens. */
 .sc-sheet{position:absolute;inset:0;overflow:hidden;background:#111;
@@ -40,12 +42,12 @@
 @keyframes hint-line{0%{transform:scaleY(0)}50%{transform:scaleY(1);transform-origin:top}50.1%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 
 /* Copy, in its own column beside the frame. */
-.sc-info{position:absolute;z-index:2;left:var(--gx);top:calc(50% - var(--fw) / 3.2 - 34px);bottom:calc(50% - var(--fw) / 3.2 - 26px);width:calc(100% - var(--fw) - var(--gx) * 2 - clamp(28px,4vw,72px));display:flex;flex-direction:column;justify-content:space-between;gap:24px}
+.sc-info{position:absolute;z-index:2;left:var(--gx);top:calc(50% - var(--fw) / 3.2 - 34px);bottom:calc(50% - var(--fw) / 3.2 - 26px);width:var(--col);display:flex;flex-direction:column;justify-content:space-between;gap:24px}
 .sc-kind{margin:0;font:400 .74rem/1.5 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:#bdbdbd}
 .sc-kind b{display:block;margin-bottom:6px;font-weight:400;color:#777}
 .sc-kind i{font-style:normal;opacity:.5}
-.sc-name{margin:0;font:700 clamp(3.4rem,7.6vw,9.6rem)/.8 var(--display);text-transform:uppercase;letter-spacing:-.05em;overflow-wrap:anywhere}
-.sc-name--long{font-size:clamp(2.8rem,4.9vw,6.4rem)}
+.sc-name{margin:0;font:700 min(clamp(3.4rem,7.6vw,9.6rem),calc(var(--col) / (var(--len, 8) * .5)))/.8 var(--display);text-transform:uppercase;letter-spacing:-.05em;overflow-wrap:anywhere}
+.sc-name--long{font-size:min(clamp(2.8rem,4.9vw,6.4rem),calc(var(--col) / (var(--len, 8) * .5)))}
 .sc-desc{max-width:38ch;margin:0;font-size:clamp(14.5px,1.05vw,18px);line-height:1.5;color:#d6d6d6}
 .sc-tools{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 20px;padding:0;list-style:none}
 .sc-tools li{padding:6px 10px 5px;border:1px solid #ffffff2e;border-radius:999px;font:400 10.5px/1.2 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:#cfcfcf}
@@ -105,9 +107,10 @@
   .sc-frame{top:96px;border-radius:10px}
   .sc-bar{top:62px}
   .sc-info{top:calc(96px + var(--fw) / 1.6 + 22px);bottom:max(22px,3svh);width:auto;right:var(--gx);justify-content:flex-start;gap:14px}
-  .sc-word{font-size:clamp(4rem,24vw,9rem)}
-  .sc-name{font-size:clamp(3rem,15vw,5.6rem)}
-  .sc-name--long{font-size:clamp(2.4rem,10.5vw,4.2rem)}
+  .sc-word{font-size:clamp(3.4rem,20vw,9rem)}
+  .sc-card{--col:calc(100vw - 32px)}
+  .sc-name{font-size:min(clamp(3rem,15vw,5.6rem),calc(var(--col) / (var(--len, 8) * .5)))}
+  .sc-name--long{font-size:min(clamp(2.4rem,10.5vw,4.2rem),calc(var(--col) / (var(--len, 8) * .5)))}
   .sc-kind{font-size:.66rem}
   .sc-desc{font-size:14px}
   .sc-tools{display:none}

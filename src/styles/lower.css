@@ -85,8 +85,8 @@
 .scrub:not(.reveal-fallback) .ah-type{position:absolute;inset:0;z-index:2;display:block;pointer-events:none;mix-blend-mode:difference}
 /* One outlined line at a time, in the band between the heading and the caption. */
 .ah-row{position:absolute;left:0;top:57%;margin:0;white-space:nowrap;font:700 clamp(5rem,12vw,15rem)/.85 var(--display);text-transform:uppercase;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px #ffffff8c;will-change:transform,opacity}
-.ah-row--guitar{transform:translate3d(calc(-4% - var(--p, 0) * 40%),-50%,0);opacity:calc(1 - var(--r, 0) * 1.6)}
-.ah-row--lifting{transform:translate3d(calc(-52% + var(--p, 0) * 40%),-50%,0);opacity:calc(var(--r, 0) * 1.6 - .6)}
+.ah-row--guitar{transform:translate3d(calc(-4% - var(--p, 0) * 40%),-50%,0);opacity:calc(1 - var(--r, 0) * 2.6)}
+.ah-row--lifting{transform:translate3d(calc(-52% + var(--p, 0) * 40%),-50%,0);opacity:calc(var(--r, 0) * 2.6 - 1.6)}
 .scrub:not(.reveal-fallback) .ah-ui{position:absolute;inset:0;gap:0;justify-content:space-between;padding:clamp(92px,12svh,128px) var(--pad) clamp(24px,4.5svh,48px);pointer-events:none}
 .scrub:not(.reveal-fallback) .ah-ui :is(a,button){pointer-events:auto}
 .scrub:not(.reveal-fallback) .ah-captions{display:grid;grid-template-columns:1fr;margin-top:auto}
@@ -104,6 +104,6 @@
   .ah-top h2{font-size:clamp(3.2rem,15vw,5rem)}
   .ah-cap h3{font-size:clamp(2.8rem,13vw,4.6rem)}
   .ah-body{font-size:15px}
-  .ah-row{font-size:clamp(4.4rem,26vw,8rem)}
+  .scrub:not(.reveal-fallback) .ah-type{display:none}
   .scrub:not(.reveal-fallback) .ah-shot--lifting{clip-path:circle(calc(var(--r, 0) * 90%) at 60% 45%)}
 }
