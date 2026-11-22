@@ -35,8 +35,10 @@
   :is(.intro-skip,.intro-done) .mast{animation:drop 1s var(--ease-out) .35s backwards}
   .story .wi{transition:transform 1.05s var(--ease-out) calc(var(--i,0) * 80ms)}
   .scrub .story:not(.is-live) .wi{transform:translateY(calc(100% + .32em))}
-  .story-text>:is(p,a){transition:opacity .8s ease .25s,transform .9s var(--ease-out) .25s}
-  .scrub .story:not(.is-live) .story-text>:is(p:not(.story-role),a){opacity:0;transform:translateY(20px)}
+  .story-text>:is(p,a,ol){transition:opacity .8s ease .25s,transform .9s var(--ease-out) .25s}
+  .story-text>.story-role{transition-delay:0s}
+  .scrub .story:not(.is-live) .story-text>:is(p,a,ol){opacity:0;transform:translateY(20px);transition-delay:0s}
+  .scrub .story:not(.is-live) .wi{transition-delay:0s}
 }
 .hero-foot .sep{font-style:normal;opacity:.45;margin:0 .35em}
 
@@ -64,9 +66,18 @@
 @media (max-width:700px),(max-aspect-ratio:4/5){.story-marquee{display:none}}
 
 /* ── Manifesto ─────────────────────────────────────────────────── */
-.manifesto{display:grid;justify-items:center;gap:clamp(30px,4vw,60px);padding:clamp(100px,18svh,220px) clamp(20px,5vw,90px) clamp(90px,14svh,180px);background:#171717;color:#f2f2f2;text-align:center}
+.manifesto{background:#171717;color:#f2f2f2}
+.mf-stage{display:grid;justify-items:center;gap:clamp(30px,4vw,60px);padding:clamp(100px,18svh,220px) clamp(20px,5vw,90px) clamp(90px,14svh,180px);text-align:center}
+/* Pinned: the words light over the first half, then the camera dives through the lettering and the
+   stage turns to white paper, the same paper the selected-work plate starts on. */
+.scrub:not(.reveal-fallback) .manifesto{height:260svh}
+.scrub:not(.reveal-fallback) .mf-stage{position:sticky;top:0;height:100svh;align-content:center;padding-block:clamp(70px,10svh,110px);overflow:clip;
+  background:color-mix(in srgb,#fff calc(var(--d, 0) * 100%),#171717)}
+.scrub:not(.reveal-fallback) .mf-text{transform:scale(calc(1 + var(--d, 0) * var(--d, 0) * 16));opacity:calc(1 - var(--d, 0) * 1.15)}
+.scrub:not(.reveal-fallback) :is(.mf-kicker,.mf-foot){opacity:calc(1 - var(--d, 0) * 5);translate:0 calc(var(--d, 0) * 60px)}
+.scrub:not(.reveal-fallback) .mf-kicker{translate:0 calc(var(--d, 0) * -60px)}
 .mf-kicker,.mf-foot{display:flex;align-items:center;gap:18px;margin:0;font:400 .76rem/1 var(--mono);text-transform:uppercase;letter-spacing:.09em;color:#8a8a8a}
-.mf-text{max-width:1180px;margin:0;font:700 clamp(3rem,7.3vw,9.2rem)/.9 var(--display);text-transform:uppercase;letter-spacing:-.035em;text-wrap:balance}
+.mf-text{position:relative;max-width:1180px;margin:0;font:700 clamp(3rem,7.3vw,9.2rem)/.9 var(--display);text-transform:uppercase;letter-spacing:-.035em;text-wrap:balance}
 .mf-word{color:#323232;transition:color .5s ease,-webkit-text-stroke-color .5s ease}
 .mf-word.on{color:#f2f2f2}
 .mf-accent.on{color:transparent;-webkit-text-stroke:2px #f2f2f2}
@@ -135,8 +146,18 @@
     .pathways{animation:paths-in linear both;animation-timeline:view();animation-range:entry 0% entry 100%}
     .path-card img{animation:path-drift linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
     .finale-card{animation:finale-in linear both;animation-timeline:view();animation-range:entry 0% entry 60%}
+    /* Each dark chapter rises as a sheet: it starts narrow and rounded on the paper and opens to full
+       width by the time its top reaches the top of the screen. */
+    :is(.manifesto,.sc-index,.practice,.after-hours){transform-origin:50% 0;animation:sheet-rise linear both;animation-timeline:view();animation-range:entry 0% entry 100%}
+    /* The project index assembles as it scrolls in, rows sliding from alternate sides. */
+    .sc-index{overflow-x:clip}
+    .sc-index .sc-rows li{animation:row-scrub linear both;animation-timeline:view();animation-range:entry 0% entry 100%}
+    .sc-index .sc-rows li:nth-child(even){animation-name:row-scrub-r}
   }
 }
+@keyframes sheet-rise{from{transform:scale(.86);border-radius:clamp(40px,7vw,120px) clamp(40px,7vw,120px) 0 0}}
+@keyframes row-scrub{from{opacity:0;transform:translateX(-14%)}}
+@keyframes row-scrub-r{from{opacity:0;transform:translateX(14%)}}
 @keyframes paths-in{from{clip-path:inset(0 9% 0 9% round 56px)}to{clip-path:inset(0 0 0 0 round 0)}}
 @keyframes path-drift{from{transform:scale(1.28) translateY(-5%)}to{transform:scale(1.04) translateY(4%)}}
 @keyframes finale-in{from{transform:scale(.86) translateY(8%);border-radius:120px}}
@@ -160,7 +181,7 @@
 
 /* ── Closing card ──────────────────────────────────────────────── */
 .finale{background:#efefef;padding:clamp(56px,7vw,110px) clamp(8px,1.2vw,20px) clamp(8px,1.2vw,20px)}
-.finale-card{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-rows:auto 1fr auto auto;column-gap:clamp(16px,2vw,32px);min-height:min(104svh,1020px);padding:clamp(34px,4.6vw,74px) clamp(22px,4vw,72px) 0;background:#141414;color:#efefef;border-radius:clamp(22px,3vw,44px)}
+.finale-card{position:relative;isolation:isolate;overflow:clip;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);grid-template-rows:auto 1fr auto auto;column-gap:clamp(16px,2vw,32px);min-height:min(104svh,1020px);padding:clamp(34px,4.6vw,74px) clamp(22px,4vw,72px) 0;background:#141414;color:#efefef;border-radius:clamp(22px,3vw,44px)}
 .finale-top{grid-column:1/-1;position:relative;z-index:2;display:grid;justify-items:center;gap:clamp(16px,2vw,26px);text-align:center}
 .finale-kicker{margin:0;font:400 .76rem/1 var(--mono);text-transform:uppercase;letter-spacing:.09em;color:#8f8f8f}
 .finale h2{margin:0;font:700 clamp(3.5rem,8.6vw,10.4rem)/.84 var(--display);text-transform:uppercase;letter-spacing:-.045em}
@@ -250,3 +271,12 @@
   .role-roll>span{animation:role-roll 9s cubic-bezier(.76,0,.24,1) 2.4s infinite}
 }
 @keyframes role-roll{0%,26%{transform:translateY(0)}33%,59%{transform:translateY(-1.2em)}66%,92%{transform:translateY(-2.4em)}100%{transform:translateY(-3.6em)}}
+
+/* ── Dot portrait ──────────────────────────────────────────────── */
+/* The halftone canvas sits exactly over the photograph in the portrait's own slot. Once it is
+   running, the photograph and the ink-plate tool step aside; the photo stays for screen readers. */
+.dot-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity .8s ease}
+.has-dots .dot-canvas{opacity:1}
+.hero-stage.has-dots .portrait-figure .print-layer{opacity:0}
+.hero-stage.has-dots .portrait-figure .hero-photo{opacity:calc(max(var(--dots, 0), 0) * .92);filter:brightness(0) invert(.94);transition:filter 1.2s ease}
+.hero-stage.has-dots .portrait-tool{display:none}

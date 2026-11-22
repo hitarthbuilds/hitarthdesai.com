@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useRef } from "react";
 import { Clock } from "./Clock";
 import { Words } from "./Words";
+import { DotPortrait } from "./DotPortrait";
 
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -18,8 +19,8 @@ const LIFT = [0.75, 1.05, 0.85, 1.2, 0.7, 1.1, 0.9, 1, 0.8, 1.15, 0.72, 0.95, 1.
 const SPIN = [-6, 4, -3, 7, -5, 3, -8, 5, -4, 6, -7, 2, 4];
 
 /**
- * The pinned introduction. Scroll contracts the portrait into an inset while the story
- * appears behind it; a fine pointer brushes the registered halftone plate over the photo.
+ * The pinned introduction. Scroll contracts the portrait into a rounded inset; the story rises in
+ * beside it once the picture has cleared its column. A fine pointer brushes the halftone plate.
  * Everything runs on refs and CSS variables, so React never re-renders while scrolling.
  */
 export function Hero() {
@@ -34,6 +35,9 @@ export function Hero() {
     const ink = portrait.querySelector<HTMLElement>(".print-layer")!;
     const inkButton = entrance.querySelector<HTMLButtonElement>(".print-button")!;
     const story = entrance.querySelector<HTMLElement>(".story")!;
+    const storyText = story.querySelector<HTMLElement>(".story-text")!;
+    const storyEdges = [...storyText.querySelectorAll<HTMLElement>(".w, .story-text > p:not(.story-role), .story-steps")];
+    const marquee = story.querySelector<HTMLElement>(".story-marquee")!;
     const controls = [".hero-info", ".portrait-tool", ".hero-foot"].map((s) => stage.querySelector<HTMLElement>(s)!);
     const letters = [...stage.querySelectorAll<HTMLElement>(".hn .chi:not(.dot)")];
     const force = letters.map(() => 0);
@@ -76,11 +80,20 @@ export function Hero() {
       const initialCenter = mobile ? 54 : Math.max(59, 100 - (initialSize / w) * 50 + 0.1);
       portrait.style.left = lerp(initialCenter, (box.left + 100 - box.right) / 2, t).toFixed(2) + "%";
       portrait.style.bottom = (box.bottom * t).toFixed(2) + "%";
-      story.style.opacity = String(clamp(0.18 + t * 1.4));
+      stage.style.setProperty("--t", t.toFixed(4));
       story.style.setProperty("--p", progress.toFixed(4));
-      if (progress > 0.42) story.classList.add("is-live");
-      else if (progress < 0.3) story.classList.remove("is-live");
-      setInert(story, progress < 0.54);
+      // The story is only shown once the shrinking portrait has moved clear of it, so no line of it
+      // is ever hidden under the picture; the marquee likewise waits for the card to lift off it.
+      const pr = pin.getBoundingClientRect();
+      const card = { l: (w * box.left * t) / 100, r: w - (w * box.right * t) / 100, t: (h * box.top * t) / 100, b: h - (h * box.bottom * t) / 100 };
+      const sr = storyText.getBoundingClientRect();
+      const right = Math.max(...storyEdges.map((e) => (e.offsetParent ? e.getBoundingClientRect().right : 0))) - pr.left;
+      const clear = !(right > card.l - 28 && sr.left - pr.left < card.r + 28 && sr.bottom - pr.top > card.t - 28 && sr.top - pr.top < card.b + 28);
+      const live = clear && progress > 0.2;
+      story.classList.toggle("is-live", live);
+      setInert(story, !live);
+      const mq = marquee.getBoundingClientRect().top - pr.top + 12;
+      marquee.style.opacity = clamp((mq - card.b) / 60).toFixed(3);
       for (const el of controls) setInert(el, progress >= 0.38);
       if (progress > 0.35 && brush.length) clearBrush();
       if (progress > 0.2 && force.some(Boolean)) releaseLetters();
@@ -152,6 +165,7 @@ export function Hero() {
         stage.removeAttribute("style");
         portrait.removeAttribute("style");
         story.removeAttribute("style");
+        marquee.removeAttribute("style");
         story.classList.add("is-live");
         setInert(story, false);
         controls.forEach((el) => setInert(el, false));
@@ -323,6 +337,7 @@ export function Hero() {
               <source media="(max-width:700px)" srcSet="/media/hero-print-mobile.webp" />
               <img src="/media/hero-print.webp" width={1254} height={1254} alt="" decoding="async" />
             </picture>
+            <DotPortrait />
           </div>
           <div className="portrait-tool">
             <button type="button" className="print-button" aria-pressed="false">

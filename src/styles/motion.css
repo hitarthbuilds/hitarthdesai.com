@@ -81,3 +81,22 @@ body.menu-open .cursor{opacity:0}
   .pz-c{-webkit-text-stroke:calc(min(var(--f, 0) * 4, 1) * 1.5px) currentColor;-webkit-text-fill-color:color-mix(in srgb,currentColor calc((1 - var(--f, 0)) * 100%),transparent);transform:translateY(calc(var(--f, 0) * -.06em))}
   .pz--fill .pz-c{-webkit-text-stroke:1.5px currentColor;-webkit-text-fill-color:color-mix(in srgb,currentColor calc(var(--f, 0) * 100%),transparent)}
 }
+
+/* Scroll-driven reveals. Where the browser can tie animation to scroll position, headings climb out of
+   their masks word by word and blocks rise as they travel up the screen, and both run backwards when
+   you scroll back. The class reveals above remain for browsers without scroll timelines, for reduced
+   motion, and for the first screen of inner pages, which should play on load. Base states stay
+   visible here, so anything whose timeline cannot run is simply shown. */
+@supports (animation-timeline:view()){
+  @media (prefers-reduced-motion:no-preference){
+    .scrub:not(.reveal-fallback) [data-reveal="words"]:not(:is(.case-intro,.blog-intro,.post-head,.nf) *){view-timeline:--words block}
+    .scrub:not(.reveal-fallback) [data-reveal="words"]:not(:is(.case-intro,.blog-intro,.post-head,.nf) *) .wi{transform:none;transition:none;transform-origin:0 100%;
+      animation:words-scrub linear both;animation-timeline:--words;animation-range:entry calc(min(var(--i, 0), 8) * 4%) cover calc(34% + min(var(--i, 0), 8) * 3%)}
+    .scrub:not(.reveal-fallback) [data-reveal="up"]:not(:is(.case-intro,.blog-intro,.post-head,.nf) *){opacity:1;transform:none;
+      animation:up-scrub linear both;animation-timeline:view();animation-range:entry 0% entry 90%}
+    /* The footer name sits at the very end of the page, so its letters finish within its own entry. */
+    .scrub:not(.reveal-fallback) .finale-name[data-reveal] .wi{animation-range:entry calc(min(var(--i, 0), 12) * 2.5%) entry calc(70% + min(var(--i, 0), 12) * 2.5%)}
+  }
+}
+@keyframes words-scrub{from{transform:translateY(calc(100% + .32em)) rotate(7deg)}to{transform:none}}
+@keyframes up-scrub{from{opacity:0;transform:translateY(70px)}to{opacity:1;transform:none}}
